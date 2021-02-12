@@ -70,7 +70,7 @@ class City(db.Model):
 class UserCity(db.Model):
     """A connection between a user and a city."""
 
-    __tablename__ = 'users_to_cities'
+    __tablename__ = 'user_cities'
 
     connect_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
@@ -79,8 +79,8 @@ class UserCity(db.Model):
     tenure = db.Column(db.String)   # new (<1yr), short (1-3yrs), 
                                     # mid (3-5yrs), long (>5yrs)
 
-    user = db.relationship('User', backref='user_to_cities')
-    city = db.relationship('City', backref='user_to_cities')
+    user = db.relationship('User', backref='user_cities')
+    city = db.relationship('City', backref='user_cities')
 
     def __repr__(self):
         return f'<UserCity connect_id={self.connect_id} '\
