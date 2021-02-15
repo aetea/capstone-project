@@ -84,6 +84,8 @@ class UserCity(db.Model):
 
     def __repr__(self):
         return f'<UserCity connect_id={self.connect_id} '\
+                f'{self.user.first_name} {self.user.last_name}<->'\
+                f'{self.city.city_name} '\
                 f'user_id={self.user_id} city_id={self.city_id} '\
                 f'user_status={self.user_status} tenure={self.tenure}>' 
 

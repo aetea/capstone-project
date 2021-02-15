@@ -49,18 +49,19 @@ def make_test_cities():
 
     print("*** Success: Added some cities ***")
 
+
 # ========= Connect Functions ===========
 
-def make_bey_fans():
-    """Make several users fans of userid=2."""
+def connect_bey_fans():
+    """Make several users fans of userid=2 for testing."""
     # TODO: update to give emma fans & have bey follow someone
     
     q = db.session.query(User)
-    bey_fans = q.filter(User.user_id != 2).limit(3).all()
+    fans = q.filter(User.user_id != 2).limit(3).all()
 
     bey = User.query.filter(User.first_name == 'bey').first()
     bey.fans=[]     # clear any prior bey.fans
-    bey.fans.extend(bey_fans)
+    bey.fans.extend(fans)
 
     db.session.add(bey)
     db.session.commit()
@@ -96,17 +97,25 @@ def connect_users_cities():
     db.session.commit() 
 
 
-def connect_one_usercity(user, city):
+def connect_one_usercity(user, city, status):
     """Function to create a single UserCity connection."""
-    # TBD if needed
-    pass 
+    # TBD if needed; only need this to bundle .add() and .commit()
+    # do not use if needing to bundle connection with other changes
+
+    user.user_cities.append(
+        UserCity(user_status = status, city=city)
+    )
+    db.session.add(user)
+    db.session.commit()
+
 
 # =========================================
 #       Read Functions 
 # =========================================
 
 def get_user_cities(user, status="all"):
-    """Get city connections for a user, optionally filter status."""
+    """Get city connections for a user, optionally filter by status."""
+    # returns [uc.city_id, uc.city_name, uc.user_status]
     
     all_uc = user.user_cities
     usercities = [ (uc.city.city_id, uc.city.city_name, uc.user_status) # c below
@@ -120,7 +129,7 @@ def get_user_cities(user, status="all"):
 
 
 def get_city_users(city, status="all"):
-    """Get all users connected to a city, optionally filter status."""
+    """Get all users connected to a city, optionally filter by status."""
 
     all_uc = city.user_cities 
     users = [ (uc.user.user_id, uc.user.first_name, uc.user.last_name, uc.user_status) 
@@ -134,18 +143,56 @@ def get_city_users(city, status="all"):
 
     return users 
 
+
 # =========================================
 #       Update Functions 
 # =========================================
 
-def update_user_city(user, city, new_status):
+def update_status(user, city, new_status):
     """Update user status for a given city."""
-    pass 
+
+    q = UserCity.query
+    uc = q.filter ((UserCity.user==user) & (UserCity.city==city))
+
+    if uc.count() == 0:
+        print(f"before update: no record")
+        connect_one_usercity(user, city, new_status) 
+    else:
+        uc = uc.one()
+        print(f"before update: {uc}")
+        uc.user_status = new_status
+
+    db.session.add(user)
+    db.session.commit() 
+
+    return f"after update: {uc}"
+
+
+def update_current_local(user, city):
+    """Update user's current location to given city."""
+
+    q = UserCity.query
+    # update existing curr_local city to past_local
+    uc = q.filter((UserCity.user==user) & (UserCity.user_status=='curr_local'))
+    uc.one().user_status = 'past_local'
+
+    # make given city curr_local city 
+    # ---------------------
+    uc_new = q.filter((UserCity.user==user) & (UserCity.city==city))
+    # check if given city exists in user_cities
+    if uc_new.count() == 1:
+        uc_new.one().user_status = 'curr_local'
+    else:
+        connect_one_usercity(user, city, status='curr_local')
+
+    # should be a single transaction - do not commit if not all successful
+    # FIXME: commit goes thru even if updating past_local fails
+    db.session.add(user)
+    db.session.commit()
 
 
 def update_teleport_id(city, tid):
     """Update teleport_id from API response."""
-
 
     pass
 
@@ -155,8 +202,13 @@ def update_teleport_id(city, tid):
 # =========================================
 
 def delete_user_city(user, city):
-    """Delete user connection to a city."""
-    pass 
+    """Delete user connection to a city.""" 
+
+    q = UserCity.query
+    uc = q.filter((UserCity.user==user) & (UserCity.city==city)) 
+
+    uc.delete()    # no need to do db.session.add(user) -- will error
+    db.session.commit()
 
 
 # =========================================
@@ -169,15 +221,14 @@ if __name__ == "__main__":
     app = Flask(__name__)
 
     connect_to_db(app)
+    db.create_all()
     print("Connected to DB!")
 
-    # TODO: split these into function to run once only after creating db
-    # db.create_all()
-    # print("Created all tables!")
-
-    # # create basic objects 
-    # make_test_users()
-    # make_test_cities()
-
-    # # create connections between objects 
-    # make_bey_fans()
+    if User.query.count() == 0:
+        make_test_users()
+    if City.query.count() == 0:
+        make_test_cities()
+    if UserCity.query.count() == 0:
+        connect_users_cities()
+    if Follow.query.count() == 0:
+        connect_bey_fans()
