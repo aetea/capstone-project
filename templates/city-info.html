@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %} Welcome to {{ city.city_name.title() }}! {% endblock %}
+
+{% block body %} 
+
+    {% if not city %}
+    <!-- NO CITY: show if user navigated here directly -->
+
+        <div> 
+            <!-- REPLACE this with city info using AJAX -->
+            <!-- FIXME: how to make this show info from homepage search? -->
+            <h2>No city provided</h2>
+            <h2>Where in the world would you like to go? 
+                Enter a city in the search box above</h2>
+        </div> 
+
+    {% endif %}
+
+    {% if city %} 
+
+        <!-- section 0: city name and photo -->
+        <div>
+            <table>
+                <tr>
+                    <td><h1 id="city-header">{{ city.city_name.title() }}</h1></td>
+                    <td>(insert photo here)</td>
+                </tr>
+                <tr>
+                    <td>Here's some info about it... <br></td>
+                </tr>
+                <tr>
+                    <td id="country">Country: {{ city.country.title() }} </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- TODO: make tables inside divs for header & body separation -->
+        <!-- section 1: safety score -->
+        <div class="scorebox" id="safety-field"> 
+            <h2>safety: B</h2>
+            <p> FILL FROM API </p>
+        </div>
+    
+        <!-- section 2: cost of living -->
+        <div class="scorebox" id="cost-field">
+            <h2>cost of living: D</h2>
+            <p> FILL FROM API </p>
+        </div>
+
+        <!-- section 3: quality of life -->
+        <div class="scorebox" id="quality-field">
+            <h2>quality of life: B</h2>
+            <p> FILL FROM API </p>
+        </div>
+
+    {% endif %}
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="/static/ajax.js"></script>
+
+{% endblock %}

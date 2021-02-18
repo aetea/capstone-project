@@ -1,0 +1,15 @@
+#header-bar div {
+    display: inline-block;
+}
+
+#header-bar h1, p {
+    margin: 5px 15px;
+}
+
+
+div.scorebox {
+    display: inline-block;
+    border: solid 1px;
+    padding: 15px;
+    margin: 10px;
+}

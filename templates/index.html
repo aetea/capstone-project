@@ -1,14 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-    <!-- FORM:  -->
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block title %}  {% endblock %}
+
+{% block body %}
+
+    <!-- header-search should not be shown -->
+
+    <h1>Welcome to Looksee!</h1>
+    <form action="/city-search">
+        <label for="city-search">Where in the world would you like to go?</label>
+        <input type="text" name="city-search" id="homepage-search" />
+        <input type="submit">
+    </form>
+
+{% endblock %}
+
+{% set active_page = "index" %}

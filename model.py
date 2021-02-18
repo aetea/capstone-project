@@ -57,7 +57,7 @@ class City(db.Model):
     city_name = db.Column(db.String, nullable=False)
     urban_area = db.Column(db.String)
     country = db.Column(db.String, nullable=False)
-    teleport_id = db.Column(db.Integer) 
+    teleport_id = db.Column(db.Integer)    # geoname_id in teleport API
 
     # user_cities = a list of UserCity objects ### RELATIONSHIP
 
@@ -65,6 +65,20 @@ class City(db.Model):
         return f'<City city_id={self.city_id} city_name={self.city_name} '\
                 f'urban_area={self.urban_area}, country={self.country} '\
                 f'teleport_id={self.teleport_id}>'
+
+
+    def make_dict(self):
+        """Convert object to a dictionary for JS."""
+
+        dict = {
+            "cityId": self.city_id, 
+            "cityName": self.city_name, 
+            "urbanArea": self.urban_area, 
+            "country": self.country, 
+            "teleId": self.teleport_id
+        }
+
+        return dict
 
 
 class UserCity(db.Model):
