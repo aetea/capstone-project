@@ -19,17 +19,22 @@ $('#header-search').on('submit', (evt) => {
     evt.preventDefault();
 
     // get user input from the search box 
-    const cityName = $('#header-search-box').val();
-
-    // change URL 
-    changeUrl(cityName, `/city-info/${cityName}`);
+    const cityLookup = $('#header-search-box').val();
     
     // // send user-input to the server, get a Response, then do this 
-    $.get("/api/city", {cname: cityName}, (res) => {
+    $.get("/api/city", {cname: cityLookup}, (res) => {
         // alert("hi from city api");
-        // update page DOM to display response data  
-        $("#city-header").text(res.city_name); // TODO: make title case (from server)
-        $("#country").text(res.country); // TODO: make title case
-    });
 
+        // TODO: add error handling: if no city found/returned
+        // might happen if non-city, or if db/teleport has no info
+
+        // update page DOM to display response data  
+        $("#city-header").text(res.cityName); // TODO: make title case (from server)
+        $("#country").text(res.country); // TODO: make title case
+        
+        // change URL 
+        changeUrl(res.cityName, `/city-info/${res.cityName}`);
+    });
+    
+    
 });
