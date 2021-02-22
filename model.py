@@ -63,7 +63,7 @@ class City(db.Model):
 
     def __repr__(self):
         return f'<City city_id={self.city_id} city_name={self.city_name} '\
-                f'urban_area={self.urban_area}, country={self.country} '\
+                f'urban_area={self.urban_area} country={self.country} '\
                 f'teleport_id={self.teleport_id}>'
 
 

@@ -97,16 +97,27 @@ def connect_users_cities():
     db.session.commit() 
 
 
-def connect_one_usercity(user, city, status):
-    """Function to create a single UserCity connection."""
-    # TBD if needed; only need this to bundle .add() and .commit()
+def connect_one_usercity(userid, cityid, status="future"):
+    """Function to create a single UserCity connection, given IDs."""
     # do not use if needing to bundle connection with other changes
+    print(" * " * 15)
+    print("now running crud.py...")
+
+    user = User.query.get(userid)
+    print(f"User object found is {user}")
+    city = City.query.get(cityid)
+    print(f"City object found is {city}")
 
     user.user_cities.append(
         UserCity(user_status = status, city=city)
     )
+
+    print(" * " * 15)
+    print(f"last usercity before commit: {user.user_cities[-1]}")
     db.session.add(user)
     db.session.commit()
+    print(f"last usercity after commit {user.user_cities[-1]}")
+    print(" * " * 15)
 
 
 # =========================================
