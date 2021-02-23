@@ -27,9 +27,8 @@ $('#header-search').on('submit', (evt) => {
         // might happen if non-city, or if db/teleport has no info
 
         // update page DOM to display response data  
-        // TODO: should this all just be a separate HTML file? replace entire table
-        $("#city-header").text(res.cityName); // TODO: make title case (from server)
-        $("#country").text(`Country: ${res.country}`); // TODO: make title case
+        $("#city-header").text(res.cityName); 
+        $("#country").text(`Country: ${res.country}`); 
         $("#save-btn").html(`<button type="button" onclick="saveCity('${res.cityId}')">
                             Fav ${res.cityName}</button>`);
         
@@ -59,7 +58,6 @@ $('#header-search').on('submit', (evt) => {
 
 
 // function to allow users to save city as a fav
-// TODO: (v2) add functionality to save as "lived here previously"
 
 function saveCity(cityId) {
     // add usercity to database [server POST request]

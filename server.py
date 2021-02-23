@@ -112,6 +112,8 @@ def city_info(city_name):
     """Show city info page for a given city."""
 
     check_db(city_name)
+    # FIXME: returns None if no city info found in teleport
+    # show a better error msg
 
     city = City.query.filter_by(city_name=city_name).first()
     ada = User.query.get(1) 
@@ -130,19 +132,21 @@ def search_city():
     """Query db and return matching city."""
 
     # get city name from search form
-    city_name = request.args.get("city-search")
+    city_name = request.args.get("city-search") 
 
     return redirect(f"/city-info/{city_name}")
 
 
+# TODO: (v2) add functionality to save as "lived here previously"
 @app.route("/save-city", methods=["POST"])
 def save_city(): 
     """Create usercity connection between given user and city."""
 
     # grab user from $post
     # grab city from $post 
-    connect_userid = request.form.get("user")
-    connect_cityid = request.form.get("cityId")
+    # connect_userid = request.form.get("user")
+    connect_userid = 1 #FIXME: handle real user
+    connect_cityid = request.form.get("save-btn")
 
     print(f"connecting user:{connect_userid} to city:{connect_cityid}...")
 
@@ -155,11 +159,12 @@ def save_city():
                               (UserCity.city_id==connect_cityid)).one()
     except:
         print("usercity creation failed.")
-        confirm = "fail"
     else:
-        confirm = "success"
+        usercity = UserCity.query.filter((UserCity.user_id==connect_userid) & 
+                              (UserCity.city_id==connect_cityid)).one()
+        city_name = usercity.city.city_name
 
-    return confirm
+    return redirect(f"/city-info/{city_name}")
 
 
 @app.route("/api/city")
