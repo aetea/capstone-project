@@ -8,10 +8,11 @@
     {% endif %}
 
 {% endblock %}
-
-
+    
+    
 {% block body %} 
-
+    {% set ns = namespace(saved=false) %}
+    
     {% if not city %}
     <!-- NO CITY: show if user navigated here directly -->
 
@@ -27,6 +28,13 @@
 
     {% if city %} 
 
+        {# ------- check if user has already saved this city ------- #}
+        {% for uc in user.user_cities %}
+            {% if city.city_name == uc.city.city_name %}
+                {% set ns.saved = true %}
+            {% endif %}
+        {% endfor %}
+
         <!-- section 0: city name and photo -->
         <div>
             <table>
@@ -38,25 +46,13 @@
                     <td>{{city}}</td>
                 </tr>
                 <tr>
-                    <td>{{ city.user_cities }}</td>
-                </tr>
-                <tr>
                     <td>Here's some info about it... <br></td>
                 </tr>
                 <tr>
                     <td id="country">Country: {{ city.country.title() }} </td>
                 </tr>
                 <tr>
-                    {# FIXME: doesn't work after ajax #}
-                    {# check if user has already saved this city - if no, show save button #}
-                    
-                    {% for uc in user.user_cities %}
-                        {% if city.city_name == uc.city.city_name %}
-                        {% set saved=True %}
-                        {% endif %}
-                    {% endfor %}
-
-                    {% if saved==False %}
+                    {% if ns.saved == false %}
                         <td id="save-btn">
                             <button type="button" onclick="saveCity('{{city.city_id}}')">
                                 Fav it
@@ -90,7 +86,9 @@
 
     {% endif %}
 
+    {# 
     <script src="http://code.jquery.com/jquery.js"></script>
-    <script src="/static/ajax.js"></script>
+    <script src="/static/ajax.js"></script> 
+    #}
 
 {% endblock %}

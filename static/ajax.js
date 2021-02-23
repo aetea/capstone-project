@@ -41,6 +41,23 @@ $('#header-search').on('submit', (evt) => {
 
 // =============== Save Functions ================
 
+
+// function to check the saved status of city -- need this to run 
+// on page reload, and also after js/ajax
+// function checkIfSaved(cityId, userId) {
+//     $.get()
+//     // go to server, check if user.user_cities contains this city
+//     // if response == yes, show "unsave"
+//     // if response == no, show "save" button
+// }
+
+
+// check the saved status of city on page reload
+// $(document).ready( function () {
+//     checkIfSaved(city.cityId, user.userId);
+// });
+
+
 // function to allow users to save city as a fav
 // TODO: (v2) add functionality to save as "lived here previously"
 

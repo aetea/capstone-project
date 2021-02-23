@@ -23,7 +23,7 @@ app = Flask(__name__)   # create a Flask object called "app"
 
 # fetch data from teleport API
 def tp_search_city(city_name):
-    """Use Teleport API to search for a city and get basic info to save to db."""
+    """Get basic city info from Teleport API and save to db."""
 
     # send request to api endpoint, get Response object, turn into dict
     res = requests.get(f"https://api.teleport.org/api/cities/?search={city_name}&limit=1")
@@ -41,17 +41,28 @@ def tp_search_city(city_name):
     # clean up response and make dict
     tele_city_more = tele_city_dict["_links"]
 
-    # TODO: also get ua-id and image? 
+    # get city name from teleport
     tele_name = tele_city_dict["name"]
-    tele_ua = tele_city_more["city:urban_area"]["name"]
+    # always get country and city_id from teleport
     tele_country = tele_city_more["city:country"]["name"]
     tele_city_id = tele_city_dict["geoname_id"]
 
-    ### add city info to db
-    # FIXME: city name from API is title case, db has lowercase --> make consistent
-    city_db_add = City(city_name=tele_name.lower(), urban_area=tele_ua.lower(), 
-                       country=tele_country.lower(), teleport_id=tele_city_id)
+    # handle errors: when no city details available
+    # city may have no urban area, eg venice, kolkata
+    try:
+        tele_ua = tele_city_more["city:urban_area"]["name"]
+    except:
+        print("sorry! no city info available from teleport")
+        # add to db (without ua) anyway?? 
+        return None
 
+    tele_ua = tele_city_more["city:urban_area"]["name"]
+
+    ### add city info to db
+    city_db_add = City(city_name=tele_name.lower(), urban_area=tele_ua.lower(), 
+                    country=tele_country.lower(), teleport_id=tele_city_id)
+
+    # TODO: also get ua-id and image? 
     print(f">> before trying to init this city: {city_db_add}")
     db.session.add(city_db_add)
     db.session.commit()
@@ -62,9 +73,21 @@ def tp_search_city(city_name):
 
 
 def tp_get_city_details(tele_city_id):
-    """Use Teleport API to get detailed info and scores about a city."""
+    """Get detailed info and scores about a city from Teleport API."""
 
     pass 
+
+
+# check DB and populate from teleport API if necessary
+def check_db(city_name):
+    """Check if db contains city, if not populate basic info from Teleport API."""
+
+    if City.query.filter_by(city_name=city_name).count() == 0:
+        # if no record in db, ping teleport and add to db
+        print("city not in db, adding basic info from Teleport")
+        tp_search_city(city_name)    
+    else:
+        print("city is in db")
 
 # =======================================
 #           Flask Routes 
@@ -88,8 +111,16 @@ def city_info_blank():
 def city_info(city_name):
     """Show city info page for a given city."""
 
+    check_db(city_name)
+
     city = City.query.filter_by(city_name=city_name).first()
-    ada = User.query.get(1)
+    ada = User.query.get(1) 
+    print("found a city object: {}".format(city))
+    print(" * " * 15)
+
+    # ## TODO: pass json of city instead of City object?
+    # city_dict = city.make_dict()
+    # jsonify(city_dict)
 
     return render_template("city-info.html", city=city, user=ada)
 
@@ -100,13 +131,6 @@ def search_city():
 
     # get city name from search form
     city_name = request.args.get("city-search")
-
-    # query db/api for city info
-    # city = City.query.filter_by(city_name=city_name).first()
-
-    # return render_template("city-info.html", 
-    #                         cityname=city_name, 
-    #                         cityinfo=city)
 
     return redirect(f"/city-info/{city_name}")
 
@@ -146,13 +170,8 @@ def city_api():
     print(" * " * 15)
     print("got a city_name: {}".format(city_name))
 
-    # check if db has city
-    if City.query.filter_by(city_name=city_name).count() == 0:
-        # if no, ping teleport and add to db
-        print("city not in db, sending to teleport for basics")
-        tp_search_city(city_name)    
-    else:
-        print("city is in db")
+    # check or populate db for city basics
+    check_db(city_name)
 
     # get city object from db
     city = City.query.filter_by(city_name=city_name).first()
