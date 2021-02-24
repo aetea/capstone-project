@@ -4,14 +4,13 @@
 
 {% block body %}
 
-    <!-- header-search should not be shown -->
-
-    <h1>Welcome to Looksee!</h1>
+<div class="container">
     <form action="/city-search">
-        <label for="city-search">Where in the world would you like to go?</label>
-        <input type="text" name="city-search" id="homepage-search" />
-        <input type="submit">
+        <p><label for="city-search">Where in the world would you like to go?</label></p>
+        <p><input type="text" name="city-search" id="homepage-search">
+        <button class="btn btn-outline-success" type="submit">Go!</button></p>
     </form>
+</div>
 
 {% endblock %}
 

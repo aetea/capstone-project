@@ -1,3 +1,10 @@
+body {
+    font-family: 'PT Serif', serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Rufina', serif;
+}
 
 div.scorebox {
     display: inline-block;
@@ -6,20 +13,9 @@ div.scorebox {
     margin: 10px;
 }
 
-div.row {
-    margin: 10px;
-}
-
-div.row div {
-    display: inline-block;
-    vertical-align: middle;
-    padding: 10px;
-}
-
 .hide {
     display: none;
 }
-
 
 .carousel-item img {
     object-fit: cover;
@@ -30,16 +26,16 @@ div.row div {
 
 #map {
     height: 400px;
-    width: 500px;
+    width: 600px;
 }
 
-#header-bar div {
+/* #header-bar div {
     display: inline-block;
 }
 
 #header-bar h1, p {
     margin: 5px 15px;
-}
+} */
 
 
 #user-photo {
@@ -63,4 +59,13 @@ div.row div {
 
 #city-photo img {
     width: 80vw;
+}
+
+#passport {
+    object-fit: contain;
+}
+
+#saved-cards div {
+    padding-left: 0;
+    padding-right: 0;
 }

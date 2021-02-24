@@ -6,24 +6,52 @@
 
 {% block body %}
 
-    <div class="row">{{ user_dict }}</div>
-    <div class="row" id="user_info">
-        <div><img src="/static/user-images/hair_innercolor.png" alt="profile photo" id="user-photo"></div>
-        <div>
-            <p>name: {{ user_dict.first }} {{ user_dict.last }} </p>
-            <p>email: {{ user_dict.email }}</p>
-            <p>current city: 
-                {% if user_dict.current_city %} 
+<div class="container">
+    <div class="row">
+        <div class="col-4" id="profile-left">
+            <div class="row"><h2>Hi, wanderer!</h2></div>
+            <div class="row card" style="width: 18rem;">
+                <img src="/static/user-images/hair_innercolor.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                <h5 class="card-title">{{ user_dict.first }} {{ user_dict.last }}</h5>
+                <p class="card-text">
+                    <strong>email:</strong> {{ user_dict.email }} <br>
+                    <strong>current city:</strong> 
+                    {% if user_dict.current_city %} 
                     {{user_dict.current_city}} <a href="">(edit city)</a>
-                {% else %} 
-                    <a href="">(add city)</a>
-                {% endif %}
-            </p> 
-        </div> 
-    </div>
+                    {% else %} <a href="">(add city)</a>
+                    {% endif %}
+                </p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+              </div>
+              <div class="row">
+                <h3>city passport</h3>
+                <img src="/static/site-images/passport_rinji.png" alt="passport image" id="passport" style="width: 18rem;">
+            </div>
+        </div>
+        <div class="col-8">
+            <h2 class="row">Your World</h2>
+            <div id="map" class="row"></div>
+            <h2 class="row">Your Cities</h2>
+            <div class="row row-cols-md-3" id="saved-cards">
+                {% for city in user_dict.saved %}
+                <div class="card text-center">
+                    <h4 class="card-header">{{ city[0] }}</h6>
+                    <div class="class-body">
+                    <!-- <h4 class="card-title">{{ city[0] }}</h4> -->
+                    <h6 class="card-subtitle text-muted">{{ city[3] }}</h6>
+                    <h6 class="card-text"><a href="/city-info/{{ city[2] }}/{{ city[0] }}">view city page</a></h6>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>    
+</div>
 
-    <div class="row" id="my_cities">
-        
+<hr class="featurette-divider">
+
         <div><ul> saved cities: 
                 {% for city in user_dict.saved %}
                     <li><a href="/city-info/{{ city[2] }}/{{ city[0] }}">
@@ -31,17 +59,6 @@
                     </a></li>
                 {% endfor %}
         </ul></div>
-
-        <div>
-            city passport<br />
-            <img src="/static/site-images/passport_rinji.png" alt="passport image">
-        </div>
-    </div>
-
-    <h2> map of saved cities </h2>
-    <p>google map of all associated cities</p>
-    <p>show two groups of pins: saved cities and past local + current </p>
-    <div id="map"></div>
 
 
 {% endblock %}
