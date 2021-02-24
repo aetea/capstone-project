@@ -4,19 +4,39 @@
 
 {% block body %}
 
-<div id="user_info">
-    <div>user photo</div>
-    <div>ada lovelace</div>
+<div class="row">{{ user_dict }}</div>
+<div class="row" id="user_info">
+    <div><img src="/static/hair_innercolor.png" alt="profile photo" id="user-photo"></div>
+    <div>
+        <p>name: {{ user_dict.first }} {{ user_dict.last }} </p>
+        <p>email: {{ user_dict.email }}</p>
+        <p>current city: 
+            {% if user_dict.current_city %} 
+                {{user_dict.current_city}} <a href="">(edit city)</a>
+            {% else %} 
+                <a href="">(add city)</a>
+            {% endif %}
+        </p> 
+    </div> 
 </div>
 
-<div id="my_cities">
-    <div>saved cities list</div>
-    <div>city passport</div>
+<div class="row" id="my_cities">
+    <div>
+        <ul> saved cities: 
+            {% for city in user_dict.saved %}
+                <li>{{ city }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div>
+        city passport<br />
+        <img src="/static/passport_rinji.png" alt="passport image">
+    </div>
 </div>
 
 <div>
-    google map of all associated cities
-    show two groups of pins: saved cities and past local + current 
+    <p>google map of all associated cities</p>
+    <p>show two groups of pins: saved cities and past local + current </p>
 </div>
 
 

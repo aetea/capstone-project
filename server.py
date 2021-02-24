@@ -99,12 +99,23 @@ def index():
     
     return render_template("index.html") 
 
+@app.route("/profile/<user_id>")
+def profile(user_id):
+    """Show profile for given user."""
 
-@app.route("/city-info")
-def city_info_blank():
-    """Show blank city info page."""
+    user = User.query.get(user_id)
 
-    return render_template("city-info.html")
+    user_dict = user.make_dict()
+    # user_json = jsonify(user_dict)
+
+    return render_template("profile.html", user_dict=user_dict)
+
+
+# @app.route("/city-info")
+# def city_info_blank():
+#     """Show blank city info page."""
+
+#     return render_template("city-info.html")
 
 
 @app.route("/city-info/<city_name>")
@@ -112,8 +123,8 @@ def city_info(city_name):
     """Show city info page for a given city."""
 
     check_db(city_name)
-    # FIXME: returns None if no city info found in teleport
-    # show a better error msg
+    # returns None if no city info found in teleport
+    # TODO: show a better error msg
 
     city = City.query.filter_by(city_name=city_name).first()
     ada = User.query.get(1) 

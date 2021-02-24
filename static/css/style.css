@@ -1,3 +1,21 @@
+
+div.scorebox {
+    display: inline-block;
+    border: solid 1px;
+    padding: 15px;
+    margin: 10px;
+}
+
+div.row {
+    margin: 10px;
+}
+
+div.row div {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 10px;
+}
+
 #header-bar div {
     display: inline-block;
 }
@@ -6,10 +24,9 @@
     margin: 5px 15px;
 }
 
-
-div.scorebox {
-    display: inline-block;
+#user-photo {
+    width: 100px;
+    height: auto;
     border: solid 1px;
-    padding: 15px;
-    margin: 10px;
+    margin: 0px 30px;
 }

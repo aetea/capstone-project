@@ -32,6 +32,23 @@ class User(db.Model):
         return f'<User user_id={self.user_id} first_name={self.first_name} '\
                 f'last_name={self.last_name} email={self.email}>'
 
+    def make_dict(self):
+        """Convert object to a dictionary for JS."""
+
+        # get list of cities saved
+        saved_cities = [(uc.city.city_name, uc.city.city_id) 
+                        for uc in self.user_cities ]
+
+        dict = {
+            "userId": self.user_id, 
+            "first": self.first_name, 
+            "last": self.last_name, 
+            "email": self.email, 
+            "saved": saved_cities    # [(cname, cid), (cname2, cid2)]
+        }
+
+        return dict
+
 
 class Follow(db.Model):
     """A follow connection between users."""
