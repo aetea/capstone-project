@@ -12,7 +12,7 @@ from pprint import pprint
 from flask import Flask, request, render_template, jsonify, redirect
 from model import db, connect_to_db, User, City, UserCity
 from crud import connect_one_usercity, get_user_cities, get_city_users, \
-update_status, update_current_local
+update_status, update_current_local, delete_user_city
 
 app = Flask(__name__)   # create a Flask object called "app"
 
@@ -148,36 +148,6 @@ def search_city():
     return redirect(f"/city-info/{city_name}")
 
 
-# TODO: (v2) add functionality to save as "lived here previously"
-@app.route("/save-city", methods=["POST"])
-def save_city(): 
-    """Create usercity connection between given user and city."""
-
-    # grab user from $post
-    # grab city from $post 
-    # connect_userid = request.form.get("user")
-    connect_userid = 1 #FIXME: handle real user
-    connect_cityid = request.form.get("save-btn")
-
-    print(f"connecting user:{connect_userid} to city:{connect_cityid}...")
-
-    # make usercity record 
-    connect_one_usercity(connect_userid, connect_cityid) 
-
-    # get usercity record from server
-    try:
-        UserCity.query.filter((UserCity.user_id==connect_userid) & 
-                              (UserCity.city_id==connect_cityid)).one()
-    except:
-        print("usercity creation failed.")
-    else:
-        usercity = UserCity.query.filter((UserCity.user_id==connect_userid) & 
-                              (UserCity.city_id==connect_cityid)).one()
-        city_name = usercity.city.city_name
-
-    return redirect(f"/city-info/{city_name}")
-
-
 @app.route("/api/city")
 def city_api():
     """Return city information only."""
@@ -197,6 +167,57 @@ def city_api():
     city_dict = city.make_dict()
 
     return jsonify(city_dict)
+
+
+# ========== Save / Unsave City ============
+
+# TODO: (v2) add functionality to save as "lived here previously"
+@app.route("/save-city", methods=["POST"])
+def save_city(): 
+    """Create usercity connection between given user and city."""
+
+    # connect_userid = request.form.get("user")
+    connect_userid = 1 #FIXME: handle real user
+    connect_cityid = request.form.get("save-btn")
+    print(f"connecting user:{connect_userid} to city:{connect_cityid}...")
+
+    # make usercity record 
+    connect_one_usercity(connect_userid, connect_cityid) 
+
+    # get usercity record from server
+    try:
+        UserCity.query.filter((UserCity.user_id==connect_userid) & 
+                              (UserCity.city_id==connect_cityid)).one()
+    except:
+        print("usercity creation failed.")
+    else:
+        usercity = UserCity.query.filter((UserCity.user_id==connect_userid) & 
+                              (UserCity.city_id==connect_cityid)).one()
+        city_name = usercity.city.city_name
+
+    return redirect(f"/city-info/{city_name}")
+
+
+@app.route("/unsave-city", methods=["POST"])
+def unsave_city(): 
+    """Function to remove a user's connection to a city."""
+
+    rm_userid = 1 #FIXME: handle real user
+    rm_cityid = request.form.get("unsave-btn")
+
+    delete_user_city(rm_userid, rm_cityid)
+    # -> removes matching usercity record (one or all? PLSCHECK) 
+
+    q = UserCity.query
+    uc = q.filter((UserCity.user_id==rm_userid) & 
+                  (UserCity.city_id==rm_cityid))
+
+    if uc.count() == 0:
+        confirm = "success"
+    else: 
+        confirm = "failed"
+
+    return redirect(request.referrer)
 
 
 # =======================================

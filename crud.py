@@ -212,11 +212,12 @@ def update_teleport_id(city, tid):
 #       Delete Functions 
 # =========================================
 
-def delete_user_city(user, city):
+def delete_user_city(user_id, city_id):
     """Delete user connection to a city.""" 
 
     q = UserCity.query
-    uc = q.filter((UserCity.user==user) & (UserCity.city==city)) 
+    uc = q.filter((UserCity.user_id==user_id) & 
+                  (UserCity.city_id==city_id)) 
 
     uc.delete()    # no need to do db.session.add(user) -- will error
     db.session.commit()
