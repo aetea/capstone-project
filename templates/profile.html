@@ -6,7 +6,7 @@
 
 <div class="row">{{ user_dict }}</div>
 <div class="row" id="user_info">
-    <div><img src="/static/hair_innercolor.png" alt="profile photo" id="user-photo"></div>
+    <div><img src="/static/user-images/hair_innercolor.png" alt="profile photo" id="user-photo"></div>
     <div>
         <p>name: {{ user_dict.first }} {{ user_dict.last }} </p>
         <p>email: {{ user_dict.email }}</p>
@@ -41,3 +41,5 @@
 
 
 {% endblock %}
+
+{% set active_page = "profile" %}

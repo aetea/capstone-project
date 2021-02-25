@@ -30,3 +30,15 @@ div.row div {
     border: solid 1px;
     margin: 0px 30px;
 }
+
+#header-profile {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+#header-profile img {
+    width: 30px;
+    height: auto;
+    vertical-align: middle;
+}

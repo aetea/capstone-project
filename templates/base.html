@@ -15,6 +15,7 @@
 
         <div class="header" id="site-logo-div">
             <h1><a href="/"><< Wander Vision >></a></h1>
+            <p>tagline of the website</p>
         </div>
 
         {% if not active_page == "index" %}
@@ -25,8 +26,16 @@
             </form>
         </div>
         {% endif %}
+
+        {% if not active_page == "profile" %}
+        <div id="header-profile">
+            <a href="/profile/1">
+                Ada (replace)
+                <img src="/static/user-images/hair_innercolor.png" alt="">
+            </a>
+        </div>
+        {% endif %}
         
-        <p>tagline of the website</p>
         <hr>
 
     </div>

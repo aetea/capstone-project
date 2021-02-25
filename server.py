@@ -28,7 +28,7 @@ def get_city_api(city_name):
     """Get basic city info from Teleport API and save to db if necessary."""
     # returns City object 
 
-    # 
+    # ? cleanup: make this a separate function ...
     ### get city info from API
     # 1. send request to api endpoint, get Response object, turn into dict
     print("*** fetching from teleport API ***")
@@ -42,6 +42,7 @@ def get_city_api(city_name):
     print("*** fetching from teleport API ***")
     res_city = requests.get(top_city_link)
     tele_city_dict = res_city.json()
+    # ? cleanup: ... END separate function
 
     # 3. extract city basics from response
     # always get country and city_id from teleport
@@ -65,6 +66,7 @@ def get_city_api(city_name):
         # look for tele_city_id in db
         City.query.filter_by(teleport_id=tele_city_id).one()
     except:
+        # ? cleanup: make this a separate function 
         # add city info to db
         tele_ua = tele_city_more["city:urban_area"]["name"]
         city_found = City(city_name=tele_name.lower(), urban_area=tele_ua.lower(), 
@@ -74,6 +76,7 @@ def get_city_api(city_name):
         db.session.add(city_found)
         db.session.commit()
         print(f">> after db commit: {city_found}")
+        # ? cleanup: ... END separate function
     else:
         city_found = City.query.filter_by(teleport_id=tele_city_id).one()
 
@@ -187,7 +190,7 @@ def city_api():
 
 # ========== Save / Unsave City ============
 
-# TODO: (v2) add functionality to save as "lived here previously"
+# TODO (v2) add functionality to save as "lived here previously"
 @app.route("/save-city", methods=["POST"])
 def save_city(): 
     """Create usercity connection between given user and city."""
@@ -232,6 +235,8 @@ def unsave_city():
         confirm = "success"
     else: 
         confirm = "failed"
+
+    print(f"unsave city operation: {confirm}")
 
     return redirect(request.referrer)
 
