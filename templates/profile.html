@@ -24,7 +24,7 @@
     <div>
         <ul> saved cities: 
             {% for city in user_dict.saved %}
-                <li>{{ city }}</li>
+                <li><a href="/city-info/{{ city[0] }}">{{ city }}</a></li>
             {% endfor %}
         </ul>
     </div>

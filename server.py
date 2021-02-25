@@ -21,73 +21,88 @@ app = Flask(__name__)   # create a Flask object called "app"
 # =======================================
 #    move to another file? 
 
-# fetch data from teleport API
-def tp_search_city(city_name):
-    """Get basic city info from Teleport API and save to db."""
 
-    # send request to api endpoint, get Response object, turn into dict
+
+# fetch data from teleport API
+def get_city_api(city_name):
+    """Get basic city info from Teleport API and save to db if necessary."""
+    # returns City object 
+
+    # 
+    ### get city info from API
+    # 1. send request to api endpoint, get Response object, turn into dict
+    print("*** fetching from teleport API ***")
     res = requests.get(f"https://api.teleport.org/api/cities/?search={city_name}&limit=1")
     res_dict = res.json()
-    # pprint(res_dict)
 
+    # 2. get city info for top result and make dictionary
     top_city_found = res_dict["_embedded"]["city:search-results"][0]
     top_city_link = top_city_found["_links"]["city:item"]["href"]
 
-    ### get city info for top result
+    print("*** fetching from teleport API ***")
     res_city = requests.get(top_city_link)
     tele_city_dict = res_city.json()
-    # pprint(tele_city_dict)
 
-    # clean up response and make dict
-    tele_city_more = tele_city_dict["_links"]
-
-    # get city name from teleport
-    tele_name = tele_city_dict["name"]
+    # 3. extract city basics from response
     # always get country and city_id from teleport
-    tele_country = tele_city_more["city:country"]["name"]
     tele_city_id = tele_city_dict["geoname_id"]
+    tele_name = tele_city_dict["name"]
+    tele_city_more = tele_city_dict["_links"]
+    tele_country = tele_city_more["city:country"]["name"]
 
-    # handle errors: when no city details available
-    # city may have no urban area, eg venice, kolkata
+    ### handle error: skip if no details/urban area available 
+    # eg venice, kolkata
     try:
         tele_ua = tele_city_more["city:urban_area"]["name"]
     except:
-        print("sorry! no city info available from teleport")
+        print(f"found a match to {tele_name} in {tele_country}")
+        print("but no detailed city info available from teleport :( sorry! ")
         # add to db (without ua) anyway?? 
         return None
 
-    tele_ua = tele_city_more["city:urban_area"]["name"]
+    ### double check before adding City to db
+    try:
+        # look for tele_city_id in db
+        City.query.filter_by(teleport_id=tele_city_id).one()
+    except:
+        # add city info to db
+        tele_ua = tele_city_more["city:urban_area"]["name"]
+        city_found = City(city_name=tele_name.lower(), urban_area=tele_ua.lower(), 
+                        country=tele_country.lower(), teleport_id=tele_city_id)
 
-    ### add city info to db
-    city_db_add = City(city_name=tele_name.lower(), urban_area=tele_ua.lower(), 
-                    country=tele_country.lower(), teleport_id=tele_city_id)
+        print(f">> before trying to init this city: {city_found}")
+        db.session.add(city_found)
+        db.session.commit()
+        print(f">> after db commit: {city_found}")
+    else:
+        city_found = City.query.filter_by(teleport_id=tele_city_id).one()
 
-    # TODO: also get ua-id and image? 
-    print(f">> before trying to init this city: {city_db_add}")
-    db.session.add(city_db_add)
-    db.session.commit()
-
-    print(f">> after db commit: {city_db_add}")
-
-    return city_db_add
+    return city_found
 
 
 def tp_get_city_details(tele_city_id):
     """Get detailed info and scores about a city from Teleport API."""
 
+    print("*** fetching from teleport API ***")
+
     pass 
 
 
 # check DB and populate from teleport API if necessary
-def check_db(city_name):
+def get_city_db(city_name):
     """Check if db contains city, if not populate basic info from Teleport API."""
 
-    if City.query.filter_by(city_name=city_name).count() == 0:
-        # if no record in db, ping teleport and add to db
-        print("city not in db, adding basic info from Teleport")
-        tp_search_city(city_name)    
+    cityname_query = City.query.filter_by(city_name=city_name)
+
+    if cityname_query.count() == 0:
+        # if none found in db, ping teleport and add to db if needed
+        print("this city name not found in db, trying Teleport")
+        city = get_city_api(city_name)  
     else:
-        print("city is in db")
+        print("city name found in db")
+        city = cityname_query.first()
+
+    return city
 
 # =======================================
 #           Flask Routes 
@@ -120,18 +135,19 @@ def profile(user_id):
 
 @app.route("/city-info/<city_name>")
 def city_info(city_name):
-    """Show city info page for a given city."""
+    """Show city info page for a given city.
+    
+    Should render city-info template, passing basic_info and tele_id as arguments
+    """
 
-    check_db(city_name)
-    # returns None if no city info found in teleport
-    # TODO: show a better error msg
-
-    city = City.query.filter_by(city_name=city_name).first()
     ada = User.query.get(1) 
+    # city = City.query.filter_by(city_name=city_name).first()
+    city = get_city_db(city_name)
+    # returns None if no city info found in teleport
+
     print("found a city object: {}".format(city))
     print(" * " * 15)
 
-    # ## TODO: pass json of city instead of City object?
     # city_dict = city.make_dict()
     # jsonify(city_dict)
 
@@ -157,10 +173,10 @@ def city_api():
     print("got a city_name: {}".format(city_name))
 
     # check or populate db for city basics
-    check_db(city_name)
+    city = get_city_db(city_name)
 
     # get city object from db
-    city = City.query.filter_by(city_name=city_name).first()
+    # city = City.query.filter_by(city_name=city_name).first()
     print("found a city object: {}".format(city))
     print(" * " * 15)
 
