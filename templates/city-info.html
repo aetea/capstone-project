@@ -66,22 +66,29 @@
             {% endif %}
         </div>
 
+        <div><ul>
+            {% for cat in city["scores"].items() %}
+                <li>{{ cat }}</li>
+            {% endfor %}
+        </ul></div>
+
         <!-- section 1: safety score -->
         <div class="scorebox" id="safety-field"> 
-            <h2>safety: B</h2>
-            <p> FILL FROM API </p>
+            <h2>safety: {{ city["scores"]["Safety"] }}</h2>
         </div>
     
         <!-- section 2: cost of living -->
         <div class="scorebox" id="cost-field">
-            <h2>cost of living: D</h2>
-            <p> FILL FROM API </p>
+            <h2>cost of living: {{ city["scores"]["Cost of Living"] }}</h2>
         </div>
 
         <!-- section 3: quality of life -->
-        <div class="scorebox" id="quality-field">
-            <h2>quality of life: B</h2>
-            <p> FILL FROM API </p>
+        <div class="scorebox" id="culture-field">
+            <h2>leisure & culture: {{ city["scores"]["Leisure & Culture"] }}</h2>
+        </div>
+
+        <div class="scorebox" id="healthcare-field">
+            <h2>healthcare: {{ city["scores"]["Healthcare"] }} </h2>
         </div>
 
     {% endif %}

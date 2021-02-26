@@ -40,6 +40,21 @@ def search_w_scores_api(city_name):    #paris (france, texas?)
     return res_dict 
 
 
+def clean_search_res(res_dict):
+    """Clean up response from Teleport API to get city basics."""
+    
+    # ? account for multiple results?
+    # * do not clean urban areas -- need to check if available separately
+
+    pass
+
+
+def clean_urban_area(city_dict):
+    """Clean up dictionary for a city:item from Teleport API."""
+
+    pass
+
+
 # fetch data from teleport API
 def get_city_api(city_name):
     """Get basic city info from Teleport API and save to db if necessary."""
@@ -76,7 +91,14 @@ def get_city_api(city_name):
     else:
         # OK, get complete ua+scores data
         ua_dict = city_item[emb]["city:urban_area"]
-        scores = ua_dict[emb]["ua:scores"]["categories"]
+        scores_list = ua_dict[emb]["ua:scores"]["categories"]
+
+        scores_dict = {}
+        for cat in scores_list:
+            score = float(cat["score_out_of_10"])
+            scores_dict[cat["name"]] = round(score, 1)
+
+        img_link = ua_dict["_links"]["ua:images"]["href"]
 
         # compile dictionary to pass to next function
         city_dict = {
@@ -85,7 +107,8 @@ def get_city_api(city_name):
             "country": tele_country,
             "urban_area": city_item_links["city:urban_area"]["name"],
             "urban_id": ua_dict["ua_id"],
-            "scores": scores
+            "scores": scores_dict,
+            "img_link": img_link
         }
 
     ### double check before adding City to db and get city_id
