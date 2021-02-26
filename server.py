@@ -11,8 +11,9 @@ from pprint import pprint
 # imports for app server
 from flask import Flask, request, render_template, jsonify, redirect
 from model import db, connect_to_db, User, City, UserCity
-from crud import connect_one_usercity, get_user_cities, get_city_users, \
-update_status, update_current_local, delete_user_city
+from crud import add_city_db, connect_one_usercity, delete_user_city, \
+                    get_user_cities, get_city_users, \
+                    update_status, update_current_local
 
 app = Flask(__name__)   # create a Flask object called "app"
 
@@ -20,27 +21,6 @@ app = Flask(__name__)   # create a Flask object called "app"
 #                 API functions 
 # =============================================
 #    move to another file? 
-
-def add_city_db(city_basics_dict):
-    """Add city and basic info to db."""
-
-    # city_to_add = City(city_name=tele_name.lower(), urban_area=tele_ua.lower(), 
-    #                     country=tele_country.lower(), teleport_id=tele_city_id)
-
-    city_to_add = City(city_name=city_basics_dict["name"].lower(),
-                        urban_area=city_basics_dict["urban_area"].lower(),
-                        country=city_basics_dict["country"].lower(),
-                        teleport_id=city_basics_dict["tele_id"]
-                        )
-
-    print(f">> before trying to init this city: {city_to_add}")
-    db.session.add(city_to_add)
-    db.session.commit()
-    print(f">> after db commit: {city_to_add}")
-
-    city_id = city_to_add.city_id
-
-    return city_id
 
 
 def search_w_scores_api(city_name):    #paris (france, texas?)
@@ -68,8 +48,10 @@ def get_city_api(city_name):
     print("HI from get_city_api...")
 
     res_dict = search_w_scores_api(city_name) 
-
     print("HI AGAIN from get_city_api...")
+
+    if res_dict["count"] == 0:
+        return None
 
     emb = "_embedded"
     city_item = res_dict[emb]["city:search-results"][0][emb]["city:item"]

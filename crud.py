@@ -50,6 +50,28 @@ def make_test_cities():
     print("*** Success: Added some cities ***")
 
 
+def add_city_db(city_basics_dict):
+    """Add city and basic info to db."""
+
+    # city_to_add = City(city_name=tele_name.lower(), urban_area=tele_ua.lower(), 
+    #                     country=tele_country.lower(), teleport_id=tele_city_id)
+
+    city_to_add = City(city_name=city_basics_dict["name"].lower(),
+                        urban_area=city_basics_dict["urban_area"].lower(),
+                        country=city_basics_dict["country"].lower(),
+                        teleport_id=city_basics_dict["tele_id"]
+                        )
+
+    print(f">> before trying to init this city: {city_to_add}")
+    db.session.add(city_to_add)
+    db.session.commit()
+    print(f">> after db commit: {city_to_add}")
+
+    city_id = city_to_add.city_id
+
+    return city_id
+
+
 # ========= Connect Functions ===========
 
 def connect_bey_fans():
