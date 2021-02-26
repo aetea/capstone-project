@@ -79,22 +79,22 @@ def get_city_api(city_name):
 
     city_item_links = city_item["_links"]
     tele_country = city_item_links["city:country"]["name"]
+    # ------------------ ooo -------------------
+    print(f"[get_city_api] result basics from teleport: ")
+    print(f"[get_city_api] {tele_name} in {tele_country} with id {tele_city_id}")
 
     ### handle error: skip if no details/urban area available 
     # eg venice, kolkata
     try:
         city_item_links["city:urban_area"]["name"]
     except:
-        print(f"found a match to {tele_name} in {tele_country}")
+        print(f"[get_city_api] found a match to {tele_name} in {tele_country}")
         print("but no detailed city info available from teleport :( sorry! ")
         # add to db (without ua) anyway?? 
         return None
     else:
         # OK, get complete ua+scores data
         ua_dict = city_item[emb]["city:urban_area"]
-        # print(" * " * 15)
-        # print("ua_dict is...")
-        # pprint(ua_dict)
         scores_list = ua_dict[emb]["ua:scores"]["categories"]
 
         scores_dict = {}
@@ -116,16 +116,24 @@ def get_city_api(city_name):
             "img_link": img_link
         }
 
-    ### double check before adding City to db and get city_id
+    ### double check before adding City to db
     try:
-        # look for tele_city_id in db
+        # look for tele_city_id in db. if one only, continue
         City.query.filter_by(teleport_id=tele_city_id).one()
     except:
-        # add city info to db
-        city_id = add_city_db(city_dict)
-    else: 
-        city = City.query.filter_by(teleport_id=tele_city_id).first()
-        city_id = city.city_id
+        # if none, add city info to db
+        # if more than one, skip 
+        if City.query.filter_by(teleport_id=tele_city_id).count() == 0:
+            city_id = add_city_db(city_dict)
+            
+    # ------------------ ooo -------------------
+    num_records = City.query.filter_by(teleport_id=tele_city_id).count()
+    print(f"[get_city_api] found {num_records} city records in db")
+
+    # get first record only, in case of duplicates
+    city = City.query.filter_by(teleport_id=tele_city_id).first()
+    print(f"[get_city_api] city from db is: {city}")
+    city_id = city.city_id
         
     city_dict["city_id"] = city_id
 

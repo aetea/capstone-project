@@ -56,7 +56,7 @@ def add_city_db(city_basics_dict):
     # city_to_add = City(city_name=tele_name.lower(), urban_area=tele_ua.lower(), 
     #                     country=tele_country.lower(), teleport_id=tele_city_id)
 
-    city_to_add = City(city_name=city_basics_dict["name"].lower(),
+    city_to_add = City(city_name=city_basics_dict["city_name"].lower(),
                         urban_area=city_basics_dict["urban_area"].lower(),
                         country=city_basics_dict["country"].lower(),
                         teleport_id=city_basics_dict["tele_id"]
