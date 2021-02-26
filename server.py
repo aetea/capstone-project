@@ -30,7 +30,7 @@ def search_w_scores_api(city_name):    #paris (france, texas?)
     payload = {
         "search": city_name,
         "limit": 1,
-        "embed": "city:search-results/city:item/city:urban_area/ua:scores"
+        "embed": "city:search-results/city:item/city:urban_area/{ua:scores,ua:images}",
     }
 
     print("*** fetching from teleport API ***")
@@ -42,7 +42,7 @@ def search_w_scores_api(city_name):    #paris (france, texas?)
 
 def clean_search_res(res_dict):
     """Clean up response from Teleport API to get city basics."""
-    
+
     # ? account for multiple results?
     # * do not clean urban areas -- need to check if available separately
 
@@ -69,7 +69,8 @@ def get_city_api(city_name):
         return None
 
     emb = "_embedded"
-    city_item = res_dict[emb]["city:search-results"][0][emb]["city:item"]
+    first_city = res_dict[emb]["city:search-results"][0] 
+    city_item = first_city[emb]["city:item"]
 
     # 3. extract city basics from response
     # always get country and city_id from teleport
@@ -91,6 +92,9 @@ def get_city_api(city_name):
     else:
         # OK, get complete ua+scores data
         ua_dict = city_item[emb]["city:urban_area"]
+        # print(" * " * 15)
+        # print("ua_dict is...")
+        # pprint(ua_dict)
         scores_list = ua_dict[emb]["ua:scores"]["categories"]
 
         scores_dict = {}
@@ -98,7 +102,8 @@ def get_city_api(city_name):
             score = float(cat["score_out_of_10"])
             scores_dict[cat["name"]] = round(score, 1)
 
-        img_link = ua_dict["_links"]["ua:images"]["href"]
+        photo_1 = ua_dict[emb]["ua:images"]["photos"][0]
+        img_link = photo_1["image"]["web"]
 
         # compile dictionary to pass to next function
         city_dict = {

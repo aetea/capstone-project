@@ -42,3 +42,7 @@ div.row div {
     height: auto;
     vertical-align: middle;
 }
+
+#city-photo img {
+    width: 80vw;
+}

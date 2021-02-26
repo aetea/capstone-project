@@ -39,14 +39,14 @@
             <h1 id="city-header">{{ city["city_name"].title() }}</h1>
         </div>
         
-        <div class="row" >
+        <div class="row">
             <div id="city-info">
-                <p>display object info</p>
-                <p>{{ city }}</p>
                 <p>Here's some info about it...</p>
                 <p id="country">Country: {{ city["country"].title() }}</p>
+                <p>display object info</p>
+                <p>{{ city }}</p>
             </div>
-            <div id="city-photo">(insert photo)</div>
+            <div id="city-photo"><img src="{{city["img_link"]}}" alt="city-image"></div>
         </div>
 
         <div class="button" id="save-btn">
@@ -66,12 +66,7 @@
             {% endif %}
         </div>
 
-        <div><ul>
-            {% for cat in city["scores"].items() %}
-                <li>{{ cat }}</li>
-            {% endfor %}
-        </ul></div>
-
+        
         <!-- section 1: safety score -->
         <div class="scorebox" id="safety-field"> 
             <h2>safety: {{ city["scores"]["Safety"] }}</h2>
@@ -90,6 +85,12 @@
         <div class="scorebox" id="healthcare-field">
             <h2>healthcare: {{ city["scores"]["Healthcare"] }} </h2>
         </div>
+
+        <div><ul>
+            {% for cat in city["scores"].items() %}
+                <li>{{ cat }}</li>
+            {% endfor %}
+        </ul></div>
 
     {% endif %}
 
