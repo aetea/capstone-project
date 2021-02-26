@@ -4,31 +4,31 @@
 
     Welcome! 
     {% if city %}
-        <!-- Welcome to {{ city.city_name.title() }}!  -->
+        Welcome to {{ city["city_name"].title() }}!
     {% endif %}
 
 {% endblock %}
     
     
 {% block body %} 
-    {% set ns = namespace(saved=false) %}
+
+{% if not city %}
+<!-- NO CITY: show if user navigated here directly -->
+
+    <div> 
+        <h2>Oops! Looks like we don't have any info. Please try another city.</h2>
+        <h2>Where in the world would you like to go? 
+            Enter a city in the search box above</h2>
+    </div> 
     
-    {% if not city %}
-    <!-- NO CITY: show if user navigated here directly -->
-
-        <div> 
-            <h2>Oops! Looks like we don't have any info. Please try again.</h2>
-            <h2>Where in the world would you like to go? 
-                Enter a city in the search box above</h2>
-        </div> 
-
     {% endif %}
-
+    
+    {% set ns = namespace(saved=false) %}
     {% if city %} 
 
         {# ------- check if user has already saved this city ------- #}
         {% for uc in user.user_cities %}
-            {% if city.city_name == uc.city.city_name %}
+            {% if city["city_id"] == uc.city.city_id %}
                 {% set ns.saved = true %}
             {% endif %}
         {% endfor %}
@@ -36,7 +36,7 @@
         <!-- section 0: city name and photo -->
 
         <div>
-            <h1 id="city-header">{{ city.city_name.title() }}</h1>
+            <h1 id="city-header">{{ city["city_name"].title() }}</h1>
         </div>
         
         <div class="row" >
@@ -44,7 +44,7 @@
                 <p>display object info</p>
                 <p>{{ city }}</p>
                 <p>Here's some info about it...</p>
-                <p id="country">Country: {{ city.country.title() }}</p>
+                <p id="country">Country: {{ city["country"].title() }}</p>
             </div>
             <div id="city-photo">(insert photo)</div>
         </div>
@@ -52,14 +52,14 @@
         <div class="button" id="save-btn">
             {% if ns.saved == false %}
                 <form action="/save-city" method="POST">
-                    <button name="save-btn" value={{city.city_id}}>
-                        Fav {{ city.city_name }}
+                    <button name="save-btn" value={{city["city_id"]}}>
+                        Fav {{ city["city_name"] }}
                     </button>
                 </form>
             {% else %}
                 *** Already saved city ***
                 <form action="/unsave-city" method="POST">
-                    <button name="unsave-btn" value={{city.city_id}}>
+                    <button name="unsave-btn" value={{city["city_id"]}}>
                         Unfave
                     </button>
                 </form>

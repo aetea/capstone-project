@@ -73,7 +73,9 @@ class City(db.Model):
     city_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     city_name = db.Column(db.String, nullable=False)
     urban_area = db.Column(db.String)
+    # TODO add urban_id from teleport
     country = db.Column(db.String, nullable=False)
+    # ? add country code from sherpa ? 
     teleport_id = db.Column(db.Integer)    # geoname_id in teleport API
 
     # user_cities = a list of UserCity objects ### RELATIONSHIP
