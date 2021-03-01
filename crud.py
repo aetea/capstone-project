@@ -1,4 +1,4 @@
-from model import db, connect_to_db, User, City, UserCity, Follow
+from model import db, connect_to_db, User, City, UserCity, Country, Follow
 
 # =========================================
 #       Create Functions 
@@ -16,38 +16,6 @@ def make_some_users(n):
         
         user = User(first_name=first_name, last_name='test', email=email)
         new_users.append(user)
-
-
-def make_test_users():
-    """Create some users for testing."""
-    test_fnames = ['ada', 'bey', 'cat', 'dory', 'emma', 'finn']
-
-    for name in test_fnames:
-        email = f'{name}@test.tst'
-        user = User(first_name=name, last_name='test', email=email)
-        db.session.add(user)
-
-    db.session.commit()
-
-    print("*** Success: Added some users ***")
-
-
-def make_test_cities():
-    """Create some cities for testing."""
-    cities = {
-        'san francisco': {'country': 'united states', 'urban_area': 'bay area'},
-        'london': {'country':'united kingdom'}, 
-        'paris': {'country': 'france'},
-        'taipei': {'country': 'taiwan'}
-    }
-
-    for c, cinfo in cities.items():
-        city = City(city_name=c, urban_area=cinfo.get('urban_area'), country=cinfo['country'])
-        db.session.add(city)
-
-    db.session.commit()
-
-    print("*** Success: Added some cities ***")
 
 
 def add_city_db(city_basics_dict):
@@ -72,51 +40,15 @@ def add_city_db(city_basics_dict):
     return city_id
 
 
+def add_country(iso3, name):
+    """Add a new country to db."""
+
+    country = Country(isocode3=iso3, name=name)
+
+    return country 
+
+
 # ========= Connect Functions ===========
-
-def connect_bey_fans():
-    """Make several users fans of userid=2 for testing."""
-    # TODO: update to give emma fans & have bey follow someone
-    
-    q = db.session.query(User)
-    fans = q.filter(User.user_id != 2).limit(3).all()
-
-    bey = User.query.filter(User.first_name == 'bey').first()
-    bey.fans=[]     # clear any prior bey.fans
-    bey.fans.extend(fans)
-
-    db.session.add(bey)
-    db.session.commit()
-
-    print("*** Success: Added some fans ***")
-    print(f"-- bey.fans = {bey.fans}")
-
-
-def connect_users_cities():
-    """Create connections between users and cities for testing."""
-
-    # give ada current and future cities
-    ada = User.query.get(1)
-    taipei = City.query.filter_by(city_name='taipei').first()
-    london = City.query.filter_by(city_name='london').first()
-
-    ada_taipei = UserCity(user_status='curr_local', tenure='mid', user=ada, city=taipei)
-    ada_london = UserCity(user_status='future', user=ada, city=london)
-
-    db.session.add(ada_taipei, ada_london)
-    db.session.commit()
-
-    # give finn current, past and future cities
-    finn = User.query.get(6)
-    sf = City.query.filter_by(city_name='san francisco').first() 
-
-    finn_sf = UserCity(user_status='curr_local', tenure='new', user=finn, city=sf)
-    finn_london = UserCity(user_status='past_local', tenure='long', user=finn, city=london)
-    finn_taipei = UserCity(user_status='future', user=finn, city=taipei)
-
-    finn.user_cities.extend([finn_sf, finn_london, finn_taipei])
-    db.session.add(finn)
-    db.session.commit() 
 
 
 def connect_one_usercity(userid, cityid, status="future"):
@@ -255,14 +187,17 @@ if __name__ == "__main__":
     app = Flask(__name__)
 
     connect_to_db(app)
-    db.create_all()
     print("Connected to DB!")
 
-    if User.query.count() == 0:
-        make_test_users()
-    if City.query.count() == 0:
-        make_test_cities()
-    if UserCity.query.count() == 0:
-        connect_users_cities()
-    if Follow.query.count() == 0:
-        connect_bey_fans()
+    # ----- if new empty db ------
+    # -- should use seed.py instead 
+
+    # db.create_all()
+    # if User.query.count() == 0:
+    #     make_test_users()
+    # if City.query.count() == 0:
+    #     make_test_cities()
+    # if UserCity.query.count() == 0:
+    #     connect_users_cities()
+    # if Follow.query.count() == 0:
+    #     connect_bey_fans()

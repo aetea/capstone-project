@@ -73,14 +73,14 @@ class City(db.Model):
     city_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     city_name = db.Column(db.String, nullable=False)
     urban_area = db.Column(db.String)
-    # TODO add urban_id from teleport
-    country = db.Column(db.String, nullable=False)
-    # *ADD* country_code = db.Column(db.String, db.ForeignKey(countries.isocode3)
-    # ^ use this instead of country name
+    # TODO add urban_id from teleport?
+    # country = db.Column(db.String, nullable=False) #*removed
+    country_code = db.Column(db.String, db.ForeignKey('countries.isocode3'))
     teleport_id = db.Column(db.Integer)    # geoname_id in teleport API
 
-    # user_cities = a list of UserCity objects ### RELATIONSHIP
-    # *ADD* country = db.Relationship('Country', backref='cities')
+    # ------ relationships -------
+    # user_cities = a list of UserCity objects 
+    country = db.Relationship('Country', backref='cities') 
 
     def __repr__(self):
         return f'<City city_id={self.city_id} city_name={self.city_name} '\
@@ -138,7 +138,7 @@ class Country(db.Model):
     # cities = list of cities ### RELATIONSHIP
 
     def __repr__(self):
-        return f'<Country isocode3={country_code3} name={name}>'
+        return f'<Country isocode3={self.isocode3} name={self.name}>'
 
 
 # =======================================
