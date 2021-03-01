@@ -23,13 +23,13 @@ app = Flask(__name__)   # create a Flask object called "app"
 #    move to another file? 
 
 
-def search_w_scores_api(city_name):    #paris (france, texas?)
+def search_w_scores_api(city_name, limit=1):    #paris (france, texas?)
     """Get detailed info and scores about a city from Teleport API."""
     # fetch city basics+details in one step, using embed param 
 
     payload = {
         "search": city_name,
-        "limit": 1,
+        "limit": limit,
         "embed": "city:search-results/city:item/city:urban_area/{ua:scores,ua:images}",
     }
 
@@ -57,7 +57,9 @@ def clean_urban_area(city_dict):
 
 # fetch data from teleport API
 def get_city_api(city_name):
-    """Get basic city info from Teleport API and save to db if necessary."""
+    """Get basic city info from Teleport API and save to db if necessary.
+    
+    Returns dict containing city details from teleport + city_id from db."""
     # return City json ??
 
     print("HI from get_city_api...")
@@ -162,26 +164,38 @@ def profile(user_id):
     return render_template("profile.html", user_dict=user_dict)
 
 
+@app.route("/city-info/<country>/<city_name>")
+def city_country_info(country, city_name):
+    """Show city info page for a given city in a given country."""
+
+    # get city details from teleport 
+
+    return f"this works! received {country} and {city_name}"
+
+
 @app.route("/city-info/<city_name>")
 def city_info(city_name):
-    """Show city info page for a given city.
+    """Check Teleport API for matching city and redirect/present city choices.
     
-    Should render city-info template, passing basic_info and tele_id as args
+    Should render city-info template, passing city details as args
     """
 
     ada = User.query.get(1) # FIXME: handle real user
     city_dict = get_city_api(city_name)
+    # returns city details from teleport + city_id from db
     # returns None if no city info found in teleport
-
+    # -------------- ooo ---------------
     print("fetched a city: {}".format(city_dict))
     print(" * " * 15)
+
+    # todo: enable multiple results
 
     return render_template("city-info.html", city=city_dict, user=ada)
 
 
 @app.route("/city-search")
 def search_city():
-    """Query db and return matching city."""
+    """Get city name from search form."""
 
     # get city name from search form
     city_name = request.args.get("city-search") 

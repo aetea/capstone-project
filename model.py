@@ -75,10 +75,12 @@ class City(db.Model):
     urban_area = db.Column(db.String)
     # TODO add urban_id from teleport
     country = db.Column(db.String, nullable=False)
-    # ? add country code from sherpa ? 
+    # *ADD* country_code = db.Column(db.String, db.ForeignKey(countries.isocode3)
+    # ^ use this instead of country name
     teleport_id = db.Column(db.Integer)    # geoname_id in teleport API
 
     # user_cities = a list of UserCity objects ### RELATIONSHIP
+    # *ADD* country = db.Relationship('Country', backref='cities')
 
     def __repr__(self):
         return f'<City city_id={self.city_id} city_name={self.city_name} '\
@@ -93,7 +95,9 @@ class City(db.Model):
             "cityId": self.city_id, 
             "cityName": self.city_name, 
             "urbanArea": self.urban_area, 
-            "country": self.country, 
+            "country": self.country, # TODO update to use iso
+            # "countryiso": self.country_code
+            # "countryname": self.country.name, 
             "teleId": self.teleport_id
         }
 
@@ -121,6 +125,20 @@ class UserCity(db.Model):
                 f'{self.city.city_name} '\
                 f'user_id={self.user_id} city_id={self.city_id} '\
                 f'user_status={self.user_status} tenure={self.tenure}>' 
+
+
+class Country(db.Model):
+    """A country."""
+
+    __tablename__ = 'countries' 
+
+    isocode3 = db.Column(db.String, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+
+    # cities = list of cities ### RELATIONSHIP
+
+    def __repr__(self):
+        return f'<Country isocode3={country_code3} name={name}>'
 
 
 # =======================================
