@@ -80,7 +80,7 @@ class City(db.Model):
 
     # ------ relationships -------
     # user_cities = a list of UserCity objects 
-    country = db.Relationship('Country', backref='cities') 
+    country = db.relationship('Country', backref='cities') 
 
     def __repr__(self):
         return f'<City city_id={self.city_id} city_name={self.city_name} '\

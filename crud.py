@@ -20,13 +20,21 @@ def make_some_users(n):
 
 def add_city_db(city_basics_dict):
     """Add city and basic info to db."""
+    # todo clean this up, make arguments more explicit
+    # todo return city object instead for consistency
 
     # city_to_add = City(city_name=tele_name.lower(), urban_area=tele_ua.lower(), 
     #                     country=tele_country.lower(), teleport_id=tele_city_id)
 
-    city_to_add = City(city_name=city_basics_dict["city_name"].lower(),
-                        urban_area=city_basics_dict["urban_area"].lower(),
-                        country=city_basics_dict["country"].lower(),
+    country_name = city_basics_dict["country_name"]
+    print(f"[crud.add_city_db] got country_name {country_name}")
+    db_country = Country.query.filter_by(name=country_name).one()
+    ccode = db_country.isocode3
+    print(f"country table says isocode for that country is {ccode}")
+
+    city_to_add = City(city_name=city_basics_dict["city_name"],
+                        urban_area=city_basics_dict["urban_area"],
+                        country_code=ccode,
                         teleport_id=city_basics_dict["tele_id"]
                         )
 
@@ -44,6 +52,8 @@ def add_country(iso3, name):
     """Add a new country to db."""
 
     country = Country(isocode3=iso3, name=name)
+    # db.session.add(country)
+    # db.session.commit()
 
     return country 
 
