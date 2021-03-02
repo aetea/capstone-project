@@ -139,24 +139,66 @@ def get_city_api(city_name):
     return city_dict
 
 
+def tele_search_cities(city_name, limit=5):
+    """Search Teleport for cityname, returns a list of results.
+    
+    Return [{city_name, country_name, geoid, match}, {...}]."""
+
+    payload = {
+        "search": city_name,
+        "limit": limit,
+        "embed": "city:search-results/city:item"
+    }
+
+    print("*** [search_cities] fetching from teleport API ***")
+    res = requests.get("https://api.teleport.org/api/cities/", params=payload)
+    res_dict = res.json()
+
+    if res_dict["count"] == 0:  # no results found at all
+        print("nothing found, returning {}")
+        return {}
+
+    emb = "_embedded"
+    res_cities = res_dict[emb]["city:search-results"]  # list of city_items
+    cities_found = []
+
+    # make new list of results, each entry is a dict
+    for city in res_cities:
+        city_item = city[emb]["city:item"]
+        tele_name = city_item["name"]
+        match = "exact" if city_name == tele_name.lower() else "alt"
+
+        city_dict = {
+            "tele_name": tele_name,
+            "tele_country": city_item["_links"]["city:country"]["name"],
+            "geoid": city_item["geoname_id"],
+            "match": match
+        }
+        cities_found.append(city_dict)
+    
+    # print(f"[search_cities] returning search results: {cities_found}")
+
+    return cities_found
+
+
 # ===========================================
 #               SHERPA API 
 # ===========================================
 
 
-API_KEY = "AIzaSyBxoYsdMHOvhXJGA_oFH0jiXpaiE-uUnFw"
-API_ROOT = "https://requirements-api.sandbox.joinsherpa.com/v2/"
+SHERPA_KEY = "AIzaSyBxoYsdMHOvhXJGA_oFH0jiXpaiE-uUnFw"
+SHERPA_ROOT = "https://requirements-api.sandbox.joinsherpa.com/v2/"
 
 
 def sherpa_all_countries():
     """Get all countries from sherpa API."""
 
     payload = {
-        "key": API_KEY
+        "key": SHERPA_KEY
     }
 
     print("*** fetching countries from sherpa API ***")
-    res = requests.get(API_ROOT+"countries", params=payload)
+    res = requests.get(SHERPA_ROOT+"countries", params=payload)
     res_dict = res.json()
 
     return res_dict 
@@ -166,7 +208,7 @@ def sherpa_country_request(ccode):
     """Send request to sherpa API for country with given isocode."""
 
     payload = {
-        "key": API_KEY,
+        "key": SHERPA_KEY,
         "filter[country]": ccode
     }
 
@@ -189,13 +231,13 @@ def sherpa_restrictions(ccode):
     """Get entry restrictions for a particular country."""
 
     payload = {
-        "key": API_KEY,
+        "key": SHERPA_KEY,
         "filter[country]": ccode, 
         "filter[category]": "NO_ENTRY, RESTRICTED_ENTRY"
     }
 
     print("*** fetching restrictions from sherpa API ***")
-    res = requests.get(API_ROOT+"restrictions", params=payload)
+    res = requests.get(SHERPA_ROOT+"restrictions", params=payload)
     res_dict = res.json()
 
     return res_dict 
@@ -212,14 +254,14 @@ def sherpa_procedures(ccode):
     """Get entry procedures for a particular country."""
 
     payload = {
-        "key": API_KEY,
+        "key": SHERPA_KEY,
         "filter[country]": ccode,
         "filter[category]": "QUARANTINE, RE_ENTRY_PERMIT, COVID_19_TEST, "\
                     "DOC_REQUIRED, HEALTH_ASSESSMENT"
     }
 
     print("*** fetching procedures from sherpa API ***")
-    res = requests.get(API_ROOT+"procedures", params=payload)
+    res = requests.get(SHERPA_ROOT+"procedures", params=payload)
     res_dict = res.json()
 
     return res_dict 
