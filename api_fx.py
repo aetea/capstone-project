@@ -10,6 +10,8 @@ from crud import add_city_db
 #               TELEPORT API
 # ===========================================
 
+TELE_ROOT = "https://api.teleport.org/api/cities/"
+
 
 def search_w_scores_api(city_name, limit=1):    #paris (france, texas?)
     """Get detailed info and scores about a city from Teleport API."""
@@ -22,7 +24,7 @@ def search_w_scores_api(city_name, limit=1):    #paris (france, texas?)
     }
 
     print("*** fetching from teleport API ***")
-    res = requests.get("https://api.teleport.org/api/cities/", params=payload)
+    res = requests.get(TELE_ROOT, params=payload)
     res_dict = res.json()
 
     return res_dict 
@@ -139,6 +141,54 @@ def get_city_api(city_name):
     return city_dict
 
 
+def tele_city_details(geoid):
+#     """Get detailed city info from Teleport; city is already in db.
+    
+#     Returns dict of {tele_id, city_name, city_id, country_iso, country_name, 
+#     urban_area, ~urban_id~, scores, img_link} or {basics only}"""
+
+#     send request to teleport with geoid
+
+#     make basic city dict 
+#     extract scores dict 
+#     add scores to basic dict  
+
+#     return dict 
+    pass
+
+
+def search_city_country(city_name, country_iso):
+    """Search Teleport for a specific city-country combo and return geoid.
+
+    Checks if user has matching city in session (from a recent search or 
+    a manual selection from search results). If no, manually matches cityname
+    and countryname to teleport results to get best match. In all cases, 
+    return geoid."""
+
+    prefetch_param = "city:search-results/city:item/{city:country}"
+    payload = {
+        "search": city_name,
+        "limit": 5,
+        "embed": prefetch_param
+    }
+
+    print("*** [search_citycountry] fetching from teleport API ***")
+    res = requests.get(TELE_ROOT, params=payload)
+    res_dict = res.json()
+
+    # identify first city item with country match
+    emb = "_embedded"
+    res_cities = res_dict[emb]["city:search-results"]  # list of city_items
+
+    for city in res_cities:
+        city_item = city[emb]["city:item"]
+        tele_iso = city_item[emb]["city:country"]["iso_alpha3"]
+        if tele_iso == country_iso:
+            return city_item["geoname_id"]
+    
+    return None
+
+
 def tele_search_cityname(city_name, limit=5):
     """Search Teleport for cityname, returns a list of results.
     
@@ -151,7 +201,7 @@ def tele_search_cityname(city_name, limit=5):
     }
 
     print("*** [search_cities] fetching from teleport API ***")
-    res = requests.get("https://api.teleport.org/api/cities/", params=payload)
+    res = requests.get(TELE_ROOT, params=payload)
     res_dict = res.json()
 
     if res_dict["count"] == 0:  # no results found at all

@@ -9,7 +9,7 @@ import requests
 from pprint import pprint
 
 # imports for app server
-from flask import Flask, request, render_template, jsonify, redirect
+from flask import Flask, request, render_template, jsonify, redirect, session 
 from model import db, connect_to_db, User, City, UserCity, Country
 from crud import add_city_db, connect_one_usercity, delete_user_city, \
                     get_user_cities, get_city_users, \
@@ -17,12 +17,17 @@ from crud import add_city_db, connect_one_usercity, delete_user_city, \
 import api_fx
 
 app = Flask(__name__)   # create a Flask object called "app"
+app.secret_key = "gjlrkejlkj64jgk39lkw"
 
 # =============================================
 #                 API functions 
 # =============================================
 #    move to another file? 
 
+session["last_city"] = {
+    # "geoid": 0,
+    # "name": ""
+}
 
 # =============================================
 #                 Flask Routes 
@@ -52,7 +57,16 @@ def city_country_info(country, city_name):
 
     # get city details from teleport 
 
+    # if this url matches last city in session
+    # there was an exact match or user picked one from last search
+    # <CODE>
+    # if session.get("last_searched_city"):
+    #     print("get_city_details with geoid from session.")
+
+    # if not, user came here directly
+
     return f"this works! received {country} and {city_name}"
+    # todo clear session["last_city"] on city-info page to prevent locking user in
 
 
 @app.route("/city-info/<city_name>")
