@@ -139,7 +139,7 @@ def get_city_api(city_name):
     return city_dict
 
 
-def tele_search_cities(city_name, limit=5):
+def tele_search_cityname(city_name, limit=5):
     """Search Teleport for cityname, returns a list of results.
     
     Return [{city_name, country_name, geoid, match}, {...}]."""

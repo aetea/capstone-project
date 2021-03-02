@@ -10,7 +10,7 @@ from pprint import pprint
 
 # imports for app server
 from flask import Flask, request, render_template, jsonify, redirect
-from model import db, connect_to_db, User, City, UserCity
+from model import db, connect_to_db, User, City, UserCity, Country
 from crud import add_city_db, connect_one_usercity, delete_user_city, \
                     get_user_cities, get_city_users, \
                     update_status, update_current_local
@@ -77,12 +77,40 @@ def city_info(city_name):
 
 @app.route("/city-search")
 def search_city():
-    """Get city name from search form."""
+    """Get city name from search form, count results from Teleport API 
+    and redirect."""
 
     # get city name from search form
     city_name = request.args.get("city-search") 
 
-    return redirect(f"/city-info/{city_name}")
+    # ask teleport for top 5 cities  
+    tele_res = api_fx.tele_search_cityname(city_name)
+    if not tele_res: 
+        # return render_template("not-found.html")
+        return "uh-oh nothing found from teleport."
+
+    # else: check list, count exact matches for city_name
+    exact_matches = []
+    for idx, res_city in enumerate(tele_res): 
+        if res_city["match"] == "exact":
+            exact_matches.append(idx)
+    print(f"{len(exact_matches)} exact matches found.")
+
+    # if 1 exact, move forward with that city:
+    if len(exact_matches) == 1:
+        # get country_iso from db first
+        city = tele_res[exact_matches[0]] 
+        cname = city["tele_name"]
+        country_name = city["tele_country"]
+        db_country = Country.query.filter_by(name=country_name).one()
+        country_iso = db_country.isocode3
+        print(f"found this country match in db: {db_country}")
+        return redirect(f"/city-info/{cname}") # * STEP-BY-STEP
+        # redirect to /iso/cityname
+
+    # else render page for city-picker, show all cities
+    else:
+        return "many results found. show all results here for user to pick."
 
 
 @app.route("/api/city")
