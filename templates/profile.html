@@ -21,13 +21,15 @@
 </div>
 
 <div class="row" id="my_cities">
-    <div>
-        <ul> saved cities: 
+    
+    <div><ul> saved cities: 
             {% for city in user_dict.saved %}
-                <li><a href="/city-info/{{ city[0] }}">{{ city }}</a></li>
+                <li><a href="/city-info/{{ city[2] }}/{{ city[0] }}">
+                    {{ city }}
+                </a></li>
             {% endfor %}
-        </ul>
-    </div>
+    </ul></div>
+
     <div>
         city passport<br />
         <img src="/static/passport_rinji.png" alt="passport image">

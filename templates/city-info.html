@@ -4,7 +4,7 @@
 
     Welcome! 
     {% if city %}
-        Welcome to {{ city["city_name"].title() }}!
+        Welcome to {{ city["tele_city_name"].title() }}!
     {% endif %}
 
 {% endblock %}
@@ -12,8 +12,8 @@
     
 {% block body %} 
 
-{% if not city %}
-<!-- NO CITY: show if user navigated here directly -->
+    {% if not city %}
+    <!-- NO CITY: show if user navigated here directly -->
 
     <div> 
         <h2>Oops! Looks like we don't have any info. Please try another city name.</h2>
@@ -36,15 +36,29 @@
         <!-- section 0: city name and photo -->
 
         <div>
-            <h1 id="city-header">{{ city["city_name"].title() }}</h1>
+            <h1 id="city-header">{{ city["tele_city_name"].title() }}</h1>
         </div>
         
         <div class="row">
             <div id="city-info">
                 <p>Here's some info about it...</p>
-                <p id="country">Country: {{ city["country_name"].title() }}</p>
-                <p>display object info</p>
+                <p id="country">Country: {{ city["tele_country_name"].title() }}</p>
+                <p><em>display city_dict info</em></p>
                 <p>{{ city }}</p>
+            </div>
+            <div id="sherpa-country"><em>display sherpa country info</em>
+                <p>{{ sherpac["attributes"] }}</p> 
+            </div>
+            <div id="restrictions"><em>display restrictions</em>
+                <ul>{% for r in sherpar %}
+                    {% if "international" == r["attributes"]["tags"][0] %}
+                        <li><strong>{{ r["attributes"]["title"] }}</strong>
+                        {{ r["attributes"]["description"] }}
+                        tags: {{ r["attributes"]["tags"] }}</li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
             </div>
             <div id="city-photo"><img src="{{city["img_link"]}}" alt="city-image"></div>
         </div>
@@ -53,7 +67,7 @@
             {% if ns.saved == false %}
                 <form action="/save-city" method="POST">
                     <button name="save-btn" value={{city["city_id"]}}>
-                        Fav {{ city["city_name"] }}
+                        Fav {{ city["tele_city_name"] }}
                     </button>
                 </form>
             {% else %}

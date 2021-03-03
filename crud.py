@@ -18,34 +18,31 @@ def make_some_users(n):
         new_users.append(user)
 
 
-def add_city_db(city_basics_dict):
-    """Add city and basic info to db."""
-    # todo clean this up, make arguments more explicit
-    # todo return city object instead for consistency
+def add_city(city_name, country_code, teleport_id, urban_area=None):
+    """Basic function to add a city to db."""
 
-    # city_to_add = City(city_name=tele_name.lower(), urban_area=tele_ua.lower(), 
-    #                     country=tele_country.lower(), teleport_id=tele_city_id)
+    city = City(city_name=city_name, country_code=country_code, 
+                teleport_id=teleport_id, urban_area=urban_area)
 
-    country_name = city_basics_dict["country_name"]
-    print(f"[crud.add_city_db] got country_name {country_name}")
-    db_country = Country.query.filter_by(name=country_name).one()
-    ccode = db_country.isocode3
-    print(f"country table says isocode for that country is {ccode}")
-
-    city_to_add = City(city_name=city_basics_dict["city_name"],
-                        urban_area=city_basics_dict["urban_area"],
-                        country_code=ccode,
-                        teleport_id=city_basics_dict["tele_id"]
-                        )
-
-    print(f">> before trying to init this city: {city_to_add}")
-    db.session.add(city_to_add)
+    print(f">> before trying to init this city: {city}")
+    db.session.add(city)
     db.session.commit()
-    print(f">> after db commit: {city_to_add}")
+    print(f">> after db commit: {city}")
 
-    city_id = city_to_add.city_id
+    return city
 
-    return city_id
+
+def add_city_db(city_basics_dict):
+    """Add city to db using dict."""
+
+    cname = city_basics_dict["tele_city_name"]
+    tid = city_basics_dict["geoid"]
+    urban_area = city_basics_dict["urban_area"]
+    ccode = city_basics_dict["country_iso"]
+    
+    city = add_city(cname, ccode, tid, urban_area)
+
+    return city
 
 
 def add_country(iso3, name):
@@ -117,6 +114,18 @@ def get_city_users(city, status="all"):
         users = [ u for u in users if u[3].find(status) != -1 ]
 
     return users 
+
+
+def get_country_iso(country_name): 
+    """Get country iso for a given country name."""
+    # ? poss to account for south korea here? 
+
+    print(f"[get_country_iso] got country_name {country_name}")
+    db_country = Country.query.filter_by(name=country_name.lower()).one()
+    ccode = db_country.isocode3
+    print(f"country table says isocode for that country is {ccode}")
+
+    return ccode
 
 
 # =========================================

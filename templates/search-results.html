@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}  {% endblock %}
+
+{% block body %}
+
+    <p>Found the following cities; which one are you interested in?</p>
+    <ul>
+    {% for city in results %}
+        <li><a href="/city-info/{{city.iso}}/{{city.tele_name}}">{{ city }}</a></li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}
+
+{% set active_page = "profile" %}

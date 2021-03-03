@@ -36,7 +36,8 @@ class User(db.Model):
         """Convert object to a dictionary for JS."""
 
         # get list of cities saved
-        saved_cities = [(uc.city.city_name, uc.city.city_id) 
+        saved_cities = [(uc.city.city_name, uc.city.city_id, 
+                        uc.city.country_code, uc.city.country.name) 
                         for uc in self.user_cities ]
 
         dict = {
@@ -44,7 +45,7 @@ class User(db.Model):
             "first": self.first_name, 
             "last": self.last_name, 
             "email": self.email, 
-            "saved": saved_cities    # [(cname, cid), (cname2, cid2)]
+            "saved": saved_cities    # [(cname, cid, ccode, ctry), (...)]
         }
 
         return dict
@@ -65,6 +66,20 @@ class Follow(db.Model):
                 f'target_id={self.follow_target}>'
 
 
+class Country(db.Model):
+    """A country."""
+
+    __tablename__ = 'countries' 
+
+    isocode3 = db.Column(db.String, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+
+    # cities = list of cities ### RELATIONSHIP
+
+    def __repr__(self):
+        return f'<Country isocode3={self.isocode3} name={self.name}>'
+
+
 class City(db.Model): 
     """A city."""
 
@@ -73,10 +88,9 @@ class City(db.Model):
     city_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     city_name = db.Column(db.String, nullable=False)
     urban_area = db.Column(db.String)
-    # TODO add urban_id from teleport?
-    # country = db.Column(db.String, nullable=False) #*removed
     country_code = db.Column(db.String, db.ForeignKey('countries.isocode3'))
     teleport_id = db.Column(db.Integer)    # geoname_id in teleport API
+    # ? add urban_id from teleport?
 
     # ------ relationships -------
     # user_cities = a list of UserCity objects 
@@ -84,7 +98,7 @@ class City(db.Model):
 
     def __repr__(self):
         return f'<City city_id={self.city_id} city_name={self.city_name} '\
-                f'urban_area={self.urban_area} country={self.country} '\
+                f'urban_area={self.urban_area} country={self.country_code} '\
                 f'teleport_id={self.teleport_id}>'
 
 
@@ -125,20 +139,6 @@ class UserCity(db.Model):
                 f'{self.city.city_name} '\
                 f'user_id={self.user_id} city_id={self.city_id} '\
                 f'user_status={self.user_status} tenure={self.tenure}>' 
-
-
-class Country(db.Model):
-    """A country."""
-
-    __tablename__ = 'countries' 
-
-    isocode3 = db.Column(db.String, primary_key=True)
-    name = db.Column(db.String, nullable=False)
-
-    # cities = list of cities ### RELATIONSHIP
-
-    def __repr__(self):
-        return f'<Country isocode3={self.isocode3} name={self.name}>'
 
 
 # =======================================

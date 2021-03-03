@@ -13,28 +13,13 @@ from crud import add_city_db
 TELE_ROOT = "https://api.teleport.org/api/cities/"
 
 
-def search_w_scores_api(city_name, limit=1):    #paris (france, texas?)
-    """Get detailed info and scores about a city from Teleport API."""
-    # fetch city basics+details in one step, using embed param 
-
-    payload = {
-        "search": city_name,
-        "limit": limit,
-        "embed": "city:search-results/city:item/city:urban_area/{ua:scores,ua:images}",
-    }
-
-    print("*** fetching from teleport API ***")
-    res = requests.get(TELE_ROOT, params=payload)
-    res_dict = res.json()
-
-    return res_dict 
-
-
 def make_basic_dict(res_dict):
     """Clean up response from Teleport API to get city basics."""
     # * do not clean urban areas -- need to check if available separately
 
     emb = "_embedded"
+    print(f"[make_basic_dict] received res_dict:")
+    pprint(res_dict)
 
     city_basics = {
         "geoid": res_dict["geoname_id"],
@@ -47,110 +32,20 @@ def make_basic_dict(res_dict):
     return city_basics
 
 
-def make_scores_dict(city_dict):
+def make_scores_dict(ua_dict):
     """Create a dict of all urban area scores by category."""
 
-    pass
+    scores_list = ua_dict["_embedded"]["ua:scores"]["categories"]
+    scores_dict = {}
+    for cat in scores_list:
+        score = float(cat["score_out_of_10"])
+        scores_dict[cat["name"]] = round(score, 1)
 
-
-# fetch data from teleport API
-def get_city_api(city_name):
-    """Get basic city info from Teleport API and save to db if necessary.
-    
-    Returns dict containing city details from teleport + city_id from db."""
-    # return City json ??
-
-    print("HI from get_city_api...")
-
-    res_dict = search_w_scores_api(city_name) 
-    print("HI AGAIN from get_city_api...")
-
-    if res_dict["count"] == 0:
-        return None
-
-    emb = "_embedded"
-    first_city = res_dict[emb]["city:search-results"][0] 
-    city_item = first_city[emb]["city:item"]
-
-    # 3. extract city basics from response
-    # always get country and city_id from teleport
-    tele_city_id = city_item["geoname_id"]
-    tele_name = city_item["name"]
-
-    city_item_links = city_item["_links"]
-    tele_country = city_item_links["city:country"]["name"]
-    # ------------------ ooo -------------------
-    print(f"[get_city_api] result basics from teleport: ")
-    print(f"[get_city_api] {tele_name} in {tele_country} with id {tele_city_id}")
-
-    ### handle error: skip if no details/urban area available 
-    # eg venice, kolkata
-    try:
-        city_item_links["city:urban_area"]["name"]
-    except:
-        print(f"[get_city_api] found a match to {tele_name} in {tele_country}")
-        print("but no detailed city info available from teleport :( sorry! ")
-        # add to db (without ua) anyway?? 
-        return None
-    else:
-        # OK, get complete ua+scores data
-        ua_dict = city_item[emb]["city:urban_area"]
-        scores_list = ua_dict[emb]["ua:scores"]["categories"]
-
-        scores_dict = {}
-        for cat in scores_list:
-            score = float(cat["score_out_of_10"])
-            scores_dict[cat["name"]] = round(score, 1)
-
-        photo_1 = ua_dict[emb]["ua:images"]["photos"][0]
-        img_link = photo_1["image"]["web"]
-
-        # compile dictionary to pass to next function
-        city_dict = {
-            "tele_id": tele_city_id,
-            "city_name": tele_name, 
-            "country_name": tele_country,
-            "urban_area": city_item_links["city:urban_area"]["name"],
-            "urban_id": ua_dict["ua_id"],
-            "scores": scores_dict,
-            "img_link": img_link
-        }
-        print("so far, city_dict is this:")
-        pprint(city_dict)
-
-    ### double check before adding City to db
-    try:
-        # look for tele_city_id in db. if one only, continue
-        City.query.filter_by(teleport_id=tele_city_id).one()
-    except:
-        # if none, add city info to db
-        # ---------------- ooo ----------------
-        print('[get_city_api] city table did not have (1) record for teleport id')
-        db_cities = City.query.filter_by(teleport_id=tele_city_id)
-        if db_cities.count() == 0:
-            print("in fact, no cities found in db.")
-            print("we should add this city to db.")
-            city_id = add_city_db(city_dict)
-        else: 
-            num_records = db_cities.count()
-            print(f"[get_city_api] found {num_records} city records in db")
-
-    # get first record only, in case of duplicates
-    city = City.query.filter_by(teleport_id=tele_city_id).first()
-    # ! MOCK DATA
-    # print("[get_city_api] shhhh -- let's pretend we got a city from db...")
-    # city = City.query.filter_by(city_name='San Francisco').first()
-
-    print(f"[get_city_api] city from db is: {city}")
-    city_id = city.city_id  # 2 (for london)
-        
-    city_dict["city_id"] = city_id
-
-    return city_dict
+    return scores_dict
 
 
 def tele_city_details(geoid):
-    """Get detailed city info from Teleport, add to db if needed
+    """Get detailed city info from Teleport, return dict. 
     
     Returns dict of {tele_id, city_name, city_id, country_iso, country_name, 
     urban_area, ~urban_id~, scores, img_link} or {basics only}"""
@@ -165,33 +60,35 @@ def tele_city_details(geoid):
 
     # check if city has detailed info, extract scores if avail
     try:
-        city_item_links["city:urban_area"]["name"]
+        res_dict["_links"]["city:urban_area"]["name"]
     except:
-        print(f"[tele_city_details] found a match to {tele_name} in {tele_country}")
-        print("but no detailed city info available from teleport :( sorry! ")
-        return None
+        print(f"[tele_city_details] found a match to {city_dict}")
+        print("but no urban area info is available :( sorry! ")
     else:
         # OK, get complete ua+scores data
-        scores_dict = make_scores_dict()
+        ua_dict = res_dict["_embedded"]["city:urban_area"]
+        city_dict["urban_area"] = ua_dict["name"]
+        city_dict["urban_id"] = ua_dict["ua_id"]
+
+        # get ua scores
+        scores_dict = make_scores_dict(ua_dict)
         city_dict["scores"] = scores_dict
+
         # also add photo link 
-        photo_1 = ua_dict[emb]["ua:images"]["photos"][0]
+        photo_1 = ua_dict["_embedded"]["ua:images"]["photos"][0]
         img_link = photo_1["image"]["web"]
+        city_dict["img_link"] = img_link
 
-    # add to db 
-
-    pass # return dict
+    return city_dict  # could be basic or scores dict 
 
 
 def search_city_country(city_name, country_iso):
     """Search Teleport for a specific city-country combo and return geoid.
 
-    Checks if user has matching city in session (from a recent search or 
-    a manual selection from search results). If no, manually matches cityname
-    and countryname to teleport results to get best match. In all cases, 
-    return geoid."""
+    Compares cityname and countryname to each teleport result to get 
+    best match."""
 
-    prefetch_param = "city:search-results/city:item/{city:country}"
+    prefetch_param = "city:search-results/city:item/city:country"
     payload = {
         "search": city_name,
         "limit": 5,
@@ -209,7 +106,7 @@ def search_city_country(city_name, country_iso):
     for city in res_cities:
         city_item = city[emb]["city:item"]
         tele_iso = city_item[emb]["city:country"]["iso_alpha3"]
-        if tele_iso == country_iso:
+        if tele_iso.lower() == country_iso.lower():
             return city_item["geoname_id"]
     
     return None
@@ -223,7 +120,7 @@ def tele_search_cityname(city_name, limit=5):
     payload = {
         "search": city_name,
         "limit": limit,
-        "embed": "city:search-results/city:item"
+        "embed": "city:search-results/city:item/{city:country}"
     }
 
     print("*** [search_cities] fetching from teleport API ***")
@@ -242,11 +139,13 @@ def tele_search_cityname(city_name, limit=5):
     for city in res_cities:
         city_item = city[emb]["city:item"]
         tele_name = city_item["name"]
+        city_country = city_item[emb]["city:country"]
         match = "exact" if city_name == tele_name.lower() else "alt"
 
         city_dict = {
             "tele_name": tele_name,
-            "tele_country": city_item["_links"]["city:country"]["name"],
+            "tele_country": city_country["name"],
+            "iso": city_country["iso_alpha3"],
             "geoid": city_item["geoname_id"],
             "match": match
         }

@@ -90,8 +90,8 @@ def connect_users_cities():
 
     # give ada current and future cities
     ada = User.query.get(1)
-    taipei = City.query.filter_by(city_name='taipei').first()
-    london = City.query.filter_by(city_name='london').first()
+    taipei = City.query.filter_by(city_name='Taipei').first()
+    london = City.query.filter_by(city_name='London').first()
 
     ada_taipei = UserCity(user_status='curr_local', tenure='mid', user=ada, city=taipei)
     ada_london = UserCity(user_status='future', user=ada, city=london)
@@ -101,7 +101,7 @@ def connect_users_cities():
 
     # give finn current, past and future cities
     finn = User.query.get(6)
-    sf = City.query.filter_by(city_name='san francisco').first() 
+    sf = City.query.filter_by(city_name='San Francisco').first() 
 
     finn_sf = UserCity(user_status='curr_local', tenure='new', user=finn, city=sf)
     finn_london = UserCity(user_status='past_local', tenure='long', user=finn, city=london)
@@ -135,6 +135,7 @@ for c in countries:
     ccode = c["attributes"]["isoAlpha3"]
     cname = c["attributes"]["countryName"]
     cadd = crud.add_country(ccode, cname)
+    print(f"adding country {cadd}")
     db.session.add(cadd)
 
 db.session.commit()
