@@ -48,27 +48,27 @@
 
         <div id="restrictions"><em>display restrictions</em>
             <ul>{% for r in sherpar %}
-                {% if "international" == r["attributes"]["tags"][0] %}
-                    <li><strong>{{ r["attributes"]["title"] }}</strong>
-                    {{ r["attributes"]["description"] }}
-                    tags: {{ r["attributes"]["tags"] }}</li>
-                {% endif %}
-                {% endfor %}
+            {% if "international" == r["attributes"]["tags"][0] %}
+                <li><strong>{{ r["attributes"]["title"] }}</strong>
+                {{ r["attributes"]["description"] }}
+                tags: {{ r["attributes"]["tags"] }}</li>
+            {% endif %}
+            {% endfor %}
             </ul>
         </div>
 
         <div id="procedures"><em>display procedures</em>
             <ul>{% for p in sherpap %}
-                {# if "international" == p["attributes"]["tags"][0] #}
-                    <li><strong>{{ p["attributes"]["title"] }}</strong>
-                    {{ p["attributes"]["description"] }}
-                    || cat: {{ p["attributes"]["category"] }}
-                    || subcat: {{ p["attributes"]["subcategory"] }}
-                    || severity: {{ p["attributes"]["severity"] }}
-                    || <a href="{{ p["attributes"]["source"]["url"] }}">source</a>
-                    || tags: {{ p["attributes"]["tags"] }}</li>
-                {# {% endif %} #}
-                {% endfor %}
+            {# if "international" == p["attributes"]["tags"][0] #}
+                <li><strong>{{ p["attributes"]["title"] }}</strong>
+                {{ p["attributes"]["description"] }}
+                || cat: {{ p["attributes"]["category"] }}
+                || subcat: {{ p["attributes"]["subcategory"] }}
+                || severity: {{ p["attributes"]["severity"] }}
+                || <a href="{{ p["attributes"]["source"]["url"] }}">source</a>
+                || tags: {{ p["attributes"]["tags"] }}</li>
+            {# {% endif %} #}
+            {% endfor %}
             </ul>
         </div>
         
@@ -78,19 +78,25 @@
 
     <div id="save-options">
     <form action="/save-city" method="POST">
-        <button id="save-btn" name="save-city" value="{{ city["city_id"] }}"
-                class={{ "show" if saved==False else "hide" }}>
-            Save {{ city["tele_city_name"] }}
-        </button>
 
-        <button id="unsave-btn" name="unsave-city" value="{{ city["city_id"] }}"
-                class={{ "show" if saved==True else "hide" }}>
-            Un-save {{ city["tele_city_name"] }}
-        </button>
+        <div id="save-buttons">
+            <button id="save-btn" name="save-city" value="{{ city["city_id"] }}"
+                    class={{ "show" if saved[0]==False else "hide" }}>
+                Bookmark {{ city["tele_city_name"] }}
+            </button>
 
-        {# {% if local==True %} {% set checked="checked" %} {% endif %} #}
-        <input type="checkbox" name="past-local" id="past-local-box">
-        <label for="past-local" {{ checked }}>I've been a local here!</label>
+            <button id="unsave-btn" name="unsave-city" value="{{ city["city_id"] }}"
+                    class={{ "show" if saved[0]==True else "hide" }}>
+                Remove bookmark for {{ city["tele_city_name"] }}
+            </button>
+        </div>
+
+        {% if saved[0]==False %} {% set show_past="hide" %} {% endif %}
+        {% if saved[1]=="past_local" %} {% set check="checked" %} {% endif %}
+        <div id="pastlocal-div" class={{ show_past }}>
+            <input type="checkbox" name="past-local" id="past-local-box" {{check}}>
+            <label for="past-local">I've also been a local here!</label>
+        </div>
 
         <input type="hidden" id="h-uid" name="user-id" value="1">
     </form>
@@ -132,5 +138,6 @@
     const userId = JSON.parse({{ user.user_id | tojson }});
     </script>
     <script src="/static/ajax.js"></script> 
+    <!-- <script src="/static/ajaxSave.js"></script>  -->
     
 {% endblock %}

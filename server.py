@@ -102,10 +102,10 @@ def city_country_info(country_iso, city_name):
     sr = api_fx.sherpa_restrictions(iso)["data"]  # []
     sp = api_fx.sherpa_procedures(iso)["data"]  # []
 
-    saved = False 
+    saved = [False]
     for uc in ada.user_cities: 
         if city_dict["city_id"] == uc.city.city_id:
-            saved = True
+            saved = [True, uc.user_status]
     
     return render_template("city-info.html", city=city_dict, user=ada, 
                             saved=saved, local=None,
@@ -178,18 +178,18 @@ def save_city():
     past_local = request.form.get("past_local")
     print(f"form values cityid is {connect_cityid}, past_local is {past_local}")
 
-    status = "past_local" if past_local == True else "future"
+    status = "past_local" if past_local == "true" else "future"  
+    # * check past_local as string because value is coming from js 
 
     print(f"connecting user:{connect_userid} to city:{connect_cityid} as {status}")
 
     # make usercity record 
-    # * temp cmtout
     # connect_one_usercity(connect_userid, connect_cityid) 
-    # usercity = update_status(connect_userid, connect_cityid, status)
-    # confirm = "success" if usercity else "failed"
+    usercity = update_status(connect_userid, connect_cityid, status)
+    confirm = "success" if usercity else "failed"
 
-    # return confirm
-    return "troubleshooting :("
+    return confirm
+    # return "troubleshooting :("
 
 
 @app.route("/unsave-city", methods=["POST"])

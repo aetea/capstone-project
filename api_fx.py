@@ -19,7 +19,7 @@ def make_basic_dict(res_dict):
 
     emb = "_embedded"
     print(f"[make_basic_dict] received res_dict:")
-    pprint(res_dict)
+    # pprint(res_dict)
 
     city_basics = {
         "geoid": res_dict["geoname_id"],

@@ -1,8 +1,8 @@
 
 // =============== Save Functions ================
 
-// function to save city
-function saveCity(userId, cityId, isPastLocal) {
+// function to send save city request to server 
+function saveCityRequest(userId, cityId, isPastLocal) {
     const connectionData = {
         "connect_userid": userId,
         "save-city": cityId,
@@ -16,12 +16,35 @@ function saveCity(userId, cityId, isPastLocal) {
             // update button 
             $("#save-btn").attr("class", "hide");
             $("#unsave-btn").attr("class", "show");
-            // $("#past-local-set").addClass("hide");
+            $("#pastlocal-div").attr("class", "show");
         } else {
             alert("uhoh! sorry, that did not work"); 
         };
     });
     
+};
+
+
+// function to evaluate save city form on page
+function saveCityProcess(evt) {
+    evt.preventDefault();
+    
+    // get userId, cityId, pastLocal status from form/page
+    const cityId = $("#save-btn").attr("value");
+    const userId = $("#h-uid").attr("value");
+    console.log(`cityId is ${cityId}`)
+    console.log(`userId is ${userId}`)
+    
+    // see if past_local checkbox is checked
+    let isPastLocal = $("#past-local-box").prop("checked") === true;
+
+    console.log(`isPastLocal is ${isPastLocal}`);     
+    console.log("running save city...");   
+    // run saveCity function 
+    // saveCity(userId, cityId, isPastLocal);          
+
+    // send request to server 
+    saveCityRequest(userId, cityId, isPastLocal)
 };
 
 
@@ -48,29 +71,9 @@ function unsaveCity(userId, cityId) {
 // ============ Save/Unsave Event Listeners ==========
 
 // listen for save-form submit
-$("#save-btn").on("click change", (evt) => {        // callback function
-    evt.preventDefault();
+$("#save-btn").on("click", saveCityProcess);
+$("#past-local-box").on("change", saveCityProcess);
 
-    // get userId, cityId, pastLocal status from form/page
-    const cityId = $("#save-btn").attr("value");
-    const userId = $("#h-uid").attr("value");
-    console.log(`cityId is ${cityId}`)
-    console.log(`userId is ${userId}`)
-
-    if ($("#past-local-box").prop("checked") === true) {
-        let isPastLocal = true;             // ? why is this not working?
-        alert("checking checkbox: true");   // this is running 
-    } else {
-        let isPastLocal = false;
-        alert("checking checkbox: false");
-    };
-
-    console.log(`isPastLocal is ${isPastLocal}`);     
-    console.log("running save city...");   
-    // run saveCity function 
-    saveCity(userId, cityId, isPastLocal);          
-
-});
 
 // listen for unsave-form submit 
 $("#unsave-btn").on("click", (evt) => {      // callback function
