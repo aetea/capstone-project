@@ -12,7 +12,7 @@
     
 {% block body %} 
 
-    {% if not city %}
+{% if not city %}
     <!-- NO CITY: show if user navigated here directly -->
 
     <div> 
@@ -21,109 +21,106 @@
             Enter a city in the search box above</h2>
     </div> 
     
-    {% endif %}
+{% endif %}
     
-    {% set ns = namespace(saved=false) %}
-    {% if city %} 
+{% if city %} 
 
-        {# ------- check if user has already saved this city ------- #}
-        {% for uc in user.user_cities %}
-            {% if city["city_id"] == uc.city.city_id %}
-                {% set ns.saved = true %}
-            {% endif %}
-        {% endfor %}
+    <!-- section 0: city name and photo -->
 
-        <!-- section 0: city name and photo -->
+    <div>
+        <h1 id="city-header">{{ city["tele_city_name"].title() }}</h1>
+    </div>
+    
+    <div class="row">
 
-        <div>
-            <h1 id="city-header">{{ city["tele_city_name"].title() }}</h1>
+        <div id="city-info">
+            <p>Here's some info about it...</p>
+            <p id="country">Country: {{ city["tele_country_name"].title() }}</p>
+            <p><em>display city_dict info</em></p>
+            <p>{{ city }}</p>
+        </div>
+
+    <!-- section 1: country travel warnings -->
+
+        <div id="sherpa-country"><em>display sherpa country info</em>
+            <p>{{ sherpac["attributes"] }}</p> 
+        </div>
+
+        <div id="restrictions"><em>display restrictions</em>
+            <ul>{% for r in sherpar %}
+                {% if "international" == r["attributes"]["tags"][0] %}
+                    <li><strong>{{ r["attributes"]["title"] }}</strong>
+                    {{ r["attributes"]["description"] }}
+                    tags: {{ r["attributes"]["tags"] }}</li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div id="procedures"><em>display procedures</em>
+            <ul>{% for p in sherpap %}
+                {# if "international" == p["attributes"]["tags"][0] #}
+                    <li><strong>{{ p["attributes"]["title"] }}</strong>
+                    {{ p["attributes"]["description"] }}
+                    || cat: {{ p["attributes"]["category"] }}
+                    || subcat: {{ p["attributes"]["subcategory"] }}
+                    || severity: {{ p["attributes"]["severity"] }}
+                    || <a href="{{ p["attributes"]["source"]["url"] }}">source</a>
+                    || tags: {{ p["attributes"]["tags"] }}</li>
+                {# {% endif %} #}
+                {% endfor %}
+            </ul>
         </div>
         
-        <div class="row">
+    </div>
 
-            <div id="city-info">
-                <p>Here's some info about it...</p>
-                <p id="country">Country: {{ city["tele_country_name"].title() }}</p>
-                <p><em>display city_dict info</em></p>
-                <p>{{ city }}</p>
-            </div>
+    <div id="city-photo"><img src="{{ city["img_link"]}}" alt="city-image"></div>
 
-            <div id="sherpa-country"><em>display sherpa country info</em>
-                <p>{{ sherpac["attributes"] }}</p> 
-            </div>
-
-            <div id="restrictions"><em>display restrictions</em>
-                <ul>{% for r in sherpar %}
-                    {% if "international" == r["attributes"]["tags"][0] %}
-                        <li><strong>{{ r["attributes"]["title"] }}</strong>
-                        {{ r["attributes"]["description"] }}
-                        tags: {{ r["attributes"]["tags"] }}</li>
-                    {% endif %}
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <div id="procedures"><em>display procedures</em>
-                <ul>{% for p in sherpap %}
-                    {# if "international" == p["attributes"]["tags"][0] #}
-                        <li><strong>{{ p["attributes"]["title"] }}</strong>
-                        {{ p["attributes"]["description"] }}
-                        || cat: {{ p["attributes"]["category"] }}
-                        || subcat: {{ p["attributes"]["subcategory"] }}
-                        || severity: {{ p["attributes"]["severity"] }}
-                        || <a href="{{ p["attributes"]["source"]["url"] }}">source</a>
-                        || tags: {{ p["attributes"]["tags"] }}</li>
-                    {# {% endif %} #}
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <div id="city-photo"><img src="{{ city["img_link"]}}" alt="city-image"></div>
-        </div>
-
-        <div id="save-options">
-            <form action="/save-city" method="POST">
-                <button id="save-btn" name="save-btn" value="{{ city["city_id"] }}"
+    <div id="save-options">
+    <form action="/save-city" method="POST">
+        <button id="save-btn" name="save-city" value="{{ city["city_id"] }}"
                 class={{ "show" if saved==False else "hide" }}>
-                    Save {{ city["tele_city_name"] }}
-                </button>
+            Save {{ city["tele_city_name"] }}
+        </button>
 
-                <button id="unsave-btn" name="unsave-btn" value="{{ city["city_id"] }}"
+        <button id="unsave-btn" name="unsave-city" value="{{ city["city_id"] }}"
                 class={{ "show" if saved==True else "hide" }}>
-                    *** Already saved city ***
-                    Un-save {{ city["tele_city_name"] }}
-                </button>
+            Un-save {{ city["tele_city_name"] }}
+        </button>
 
-                {# a checkbox for marking pastLocal here #}
-                <input type="hidden" id="h-uid" name="user-id" value="1">
-            </form>
-        </div>
+        {# {% if local==True %} {% set checked="checked" %} {% endif %} #}
+        <input type="checkbox" name="past-local" id="past-local-box">
+        <label for="past-local" {{ checked }}>I've been a local here!</label>
 
-        
-        <!-- section 1: safety score -->
-        <div class="scorebox" id="safety-field"> 
-            <h2>safety: {{ city["scores"]["Safety"] }}</h2>
-        </div>
+        <input type="hidden" id="h-uid" name="user-id" value="1">
+    </form>
+    </div>
+
     
-        <!-- section 2: cost of living -->
-        <div class="scorebox" id="cost-field">
-            <h2>cost of living: {{ city["scores"]["Cost of Living"] }}</h2>
-        </div>
+    <!-- section 2: safety score -->
+    <div class="scorebox" id="safety-field"> 
+        <h2>safety: {{ city["scores"]["Safety"] }}</h2>
+    </div>
 
-        <!-- section 3: quality of life -->
-        <div class="scorebox" id="culture-field">
-            <h2>leisure & culture: {{ city["scores"]["Leisure & Culture"] }}</h2>
-        </div>
+    <!-- section 2: cost of living -->
+    <div class="scorebox" id="cost-field">
+        <h2>cost of living: {{ city["scores"]["Cost of Living"] }}</h2>
+    </div>
 
-        <div class="scorebox" id="healthcare-field">
-            <h2>healthcare: {{ city["scores"]["Healthcare"] }} </h2>
-        </div>
+    <!-- section 3: quality of life -->
+    <div class="scorebox" id="culture-field">
+        <h2>leisure & culture: {{ city["scores"]["Leisure & Culture"] }}</h2>
+    </div>
 
-        <div><ul>
-            {% for cat in city["scores"].items() %}
-                <li>{{ cat }}</li>
-            {% endfor %}
-        </ul></div>
+    <div class="scorebox" id="healthcare-field">
+        <h2>healthcare: {{ city["scores"]["Healthcare"] }} </h2>
+    </div>
+
+    <div><ul>
+        {% for cat in city["scores"].items() %}
+            <li>{{ cat }}</li>
+        {% endfor %}
+    </ul></div>
 
     {% endif %}
 

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="shortcut icon" href="/static/site-images/favicon.ico">
+    <link rel="shortcut icon" href="/static/favicon.ico">
 
     <title>{% block title %} REPLACE TITLE {% endblock %}</title>
 </head>
@@ -28,7 +28,7 @@
         {% endif %}
 
         {% if not active_page == "profile" %}
-        <div id="header-profile" name="{{ user.user_id }}">
+        <div id="header-profile">
             <a href="/profile/{{ user.user_id }}">
                 Ada (replace)
                 <img src="/static/user-images/hair_innercolor.png" alt="">

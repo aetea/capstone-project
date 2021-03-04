@@ -33,8 +33,9 @@ app.secret_key = "gjlrkejlkj64jgk39lkw"
 @app.route("/")
 def index():
     """Show index.html template."""
+    ada = User.query.get(1)
     
-    return render_template("index.html") 
+    return render_template("index.html", user=ada) 
 
 @app.route("/profile/<user_id>")
 def profile(user_id):
@@ -54,6 +55,8 @@ def city_country_info(country_iso, city_name):
     
     Fetches city info from Teleport and Sherpa. Passes more or less details 
     depending on whether scores available. Also adds city to db if needed."""
+
+    ada = User.query.get(1)
 
     # if url matches last city in session
     # there was an exact match or user picked one from last search
@@ -99,15 +102,13 @@ def city_country_info(country_iso, city_name):
     sr = api_fx.sherpa_restrictions(iso)["data"]  # []
     sp = api_fx.sherpa_procedures(iso)["data"]  # []
 
-    ada = User.query.get(1)
-    # ada = ada.make_dict()
-
     saved = False 
     for uc in ada.user_cities: 
         if city_dict["city_id"] == uc.city.city_id:
             saved = True
     
-    return render_template("city-info.html", city=city_dict, user=ada, saved=saved,
+    return render_template("city-info.html", city=city_dict, user=ada, 
+                            saved=saved, local=None,
                             sherpac=sc, sherpar=sr, sherpap=sp)
     # * clear session["last_city"] on city-info page to prevent locking user in
 
@@ -116,6 +117,8 @@ def city_country_info(country_iso, city_name):
 def search_city():
     """Get city name from search form, count results from Teleport API 
     and redirect."""
+    
+    ada = User.query.get(1)
 
     # get city name from search form
     city_name = request.args.get("city-search") 
@@ -144,7 +147,7 @@ def search_city():
 
     # else render page for city-picker, show all cities
     else:
-        return render_template("search-results.html", results=tele_res)
+        return render_template("search-results.html", results=tele_res, user=ada)
         # return "many results found. show all results here for user to pick."
 
 
@@ -166,31 +169,27 @@ def search_city():
 
 # ========== Save / Unsave City ============
 
-# TODO (v2) add functionality to save as "lived here previously"
 @app.route("/save-city", methods=["POST"])
 def save_city(): 
     """Create usercity connection between given user and city."""
 
-    # connect_userid = request.form.get("user")
     connect_userid = 1 #FIXME: handle real user
-    connect_cityid = request.form.get("save-btn")
+    connect_cityid = request.form.get("save-city")
+    past_local = request.form.get("past_local")
+    print(f"form values cityid is {connect_cityid}, past_local is {past_local}")
 
-    print(f"connecting user:{connect_userid} to city:{connect_cityid}...")
+    status = "past_local" if past_local == True else "future"
+
+    print(f"connecting user:{connect_userid} to city:{connect_cityid} as {status}")
 
     # make usercity record 
-    connect_one_usercity(connect_userid, connect_cityid) 
+    # * temp cmtout
+    # connect_one_usercity(connect_userid, connect_cityid) 
+    # usercity = update_status(connect_userid, connect_cityid, status)
+    # confirm = "success" if usercity else "failed"
 
-    # get usercity record from server
-    # uc = UserCity.query.filter((UserCity.user_id==connect_userid) & 
-    #                           (UserCity.city_id==connect_cityid))
-    
-    # if uc.count() == 1: 
-        # print("save success!")
-    # else:
-    #     print("usercity creation error")
-    
-    # return redirect(f"/city-info/{iso}/{cname}")
-    return redirect(request.referrer)
+    # return confirm
+    return "troubleshooting :("
 
 
 @app.route("/unsave-city", methods=["POST"])
@@ -198,7 +197,7 @@ def unsave_city():
     """Function to remove a user's connection to a city."""
 
     rm_userid = 1 #FIXME: handle real user
-    rm_cityid = request.form.get("unsave-btn")
+    rm_cityid = request.form.get("unsave-city")
     hidden_info = request.form.get("user-id")
 
     delete_user_city(rm_userid, rm_cityid)

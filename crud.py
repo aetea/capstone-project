@@ -61,8 +61,6 @@ def add_country(iso3, name):
 def connect_one_usercity(userid, cityid, status="future"):
     """Function to create a single UserCity connection, given IDs."""
     # do not use if needing to bundle connection with other changes
-    print(" * " * 15)
-    print("now running crud.py...")
 
     user = User.query.get(userid)
     print(f"User object found is {user}")
@@ -79,6 +77,8 @@ def connect_one_usercity(userid, cityid, status="future"):
     db.session.commit()
     print(f"last usercity after commit {user.user_cities[-1]}")
     print(" * " * 15)
+
+    return get_one_usercity(userid, cityid)
 
 
 # =========================================
@@ -142,24 +142,25 @@ def get_country_iso(country_name):
 #       Update Functions 
 # =========================================
 
-def update_status(user, city, new_status):
+def update_status(userid, cityid, new_status):
     """Update user status for a given city."""
 
     q = UserCity.query
-    uc = q.filter ((UserCity.user==user) & (UserCity.city==city))
+    uc = q.filter ((UserCity.user_id==userid) & (UserCity.city_id==cityid))
 
     if uc.count() == 0:
         print(f"before update: no record")
-        connect_one_usercity(user, city, new_status) 
+        return connect_one_usercity(userid, cityid, new_status) 
     else:
         uc = uc.one()
-        print(f"before update: {uc}")
+        print(f"usercity before update: {uc}")
         uc.user_status = new_status
 
-    db.session.add(user)
+    db.session.add(userid)
     db.session.commit() 
+    print(f"usercity after update: {uc}")
 
-    return f"after update: {uc}"
+    return uc
 
 
 def update_current_local(user, city):
