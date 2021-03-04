@@ -1,61 +1,69 @@
 
-// ============== Search Functions =================
+// =============== Save Functions ================
 
-// function to change the url
-function changeUrl(title, url) {
-    if ( typeof(history.pushState) != "undefined") {
-        let obj = { Title: title, Url: url };
-        history.pushState(obj, obj.Title, obj.Url)
-    }
+// function to save city
+function saveCity(userId, cityId, pastLocal) {
+    const connectionData = {};
+    
+    // do something
 };
 
 
-// add listener to search box - when submit is clicked, do this 
-$('#header-search').on('submit', (evt) => {
+// function to unsave city
+function unsaveCity(userId, cityId) {
+    const connectionData = {
+        "unsave-btn": cityId,
+        "user-id": userId
+    };
+
+    $.post("/unsave-city", connectionData, (res) => {      // callback function
+        if (res === "success") {
+            // update button and text
+            $("#save-btn").attr("class", "show");
+            $("#unsave-btn").attr("class", "hide");
+        } else {
+            alert("uhoh! sorry, that did not work");
+        };
+    });
+
+};
+
+
+// ============ Save/Unsave Event Listeners ==========
+
+// listen for save-form submit
+$("#save-btn").on("submit", (evt) => {        // callback function
     evt.preventDefault();
 
-    // get user input from the search box 
-    const cityLookup = $('#header-search-box').val();
-    
-    // // send user-input to the server, get a Response, then do this 
-    $.get("/api/city", {cname: cityLookup}, (res) => {
-        // alert("hi from city api");
-        console.log("response received by jquery:");
-        console.log(res);
+    // get userId, cityId, pastLocal status from form/page
+    // run saveCity function 
 
-        // TODO: add error handling: if no city found/returned
-        // might happen if non-city, or if db/teleport has no info
+});
 
-        // update page DOM to display response data  
-        $("#city-header").text(res.cityName); 
-        $("#country").text(`Country: ${res.country}`); 
-        $("#save-btn").html(`<button type="button" onclick="saveCity('${res.cityId}')">
-                            Fav ${res.cityName}</button>`);
-        
-        // change URL 
-        changeUrl(res.cityName, `/city-info/${res.cityName}`);
-    });
+// listen for unsave-form submit 
+$("#unsave-btn").on("click", (evt) => {      // callback function
+    // thing to do 
+    evt.preventDefault(); 
+
+    // todo show warning 
+    // const userId = $("#header-profile").attr("name");
+    const cityId = $(evt.target).attr("value");
+    const userId = $("#h-uid").attr("value");
+
+    // get userid and cityid from form/page
+    console.log(`user is ${userId}`);
+    console.log(`city is ${cityId}`);
+
+    // console.log("do you want to run the unsave function now?");
+    unsaveCity(userId, cityId);
+
 });
 
 
-// =============== Save Functions ================
 
 
-// function to check the saved status of city -- need this to run 
-// on page reload, and also after js/ajax
-// function checkIfSaved(cityId, userId) {
-//     $.get()
-//     // go to server, check if user.user_cities contains this city
-//     // if response == yes, show "unsave"
-//     // if response == no, show "save" button
-// }
 
-
-// check the saved status of city on page reload
-// $(document).ready( function () {
-//     checkIfSaved(city.cityId, user.userId);
-// });
-
+// ============== OLD FUNCTIONS ================
 
 // function to allow users to save city as a fav
 

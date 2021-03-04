@@ -9,10 +9,11 @@ import requests
 from pprint import pprint
 
 # imports for app server
-from flask import Flask, request, render_template, jsonify, redirect, session 
+from flask import Flask, request, render_template, redirect, session, \
+                  jsonify, json
 from model import db, connect_to_db, User, City, UserCity, Country
 from crud import add_city_db, connect_one_usercity, delete_user_city, \
-                    get_user_cities, get_city_users, \
+                    get_one_usercity, get_user_cities, get_city_users, \
                     update_status, update_current_local
 import api_fx
 
@@ -77,6 +78,7 @@ def city_country_info(country_iso, city_name):
         return "[BETTER_ERROR] found that city in teleport, but no detailed info :("
 
     # add to db if not yet there
+    # todo: make this another func(geoid) -> return City
     db_cities = City.query.filter_by(teleport_id=geoid)
     if db_cities.count() == 0:
         print("no matching city records found in db, adding now.")
@@ -87,6 +89,7 @@ def city_country_info(country_iso, city_name):
 
     # get first record only, in case of duplicates
     city = City.query.filter_by(teleport_id=geoid).first()
+    # todo ---- end new function ----
     print(f"got this city from db: {city}")
     city_dict["city_id"] = city.city_id
 
@@ -95,12 +98,18 @@ def city_country_info(country_iso, city_name):
     sc = api_fx.sherpa_country_request(iso)["data"][0] # [1st country]
     sr = api_fx.sherpa_restrictions(iso)["data"]  # []
     sp = api_fx.sherpa_procedures(iso)["data"]  # []
-    # pass adict=alerts, 
-    ada = User.query.get(1)
 
-    return render_template("city-info.html", city=city_dict, user=ada,  
-                            sherpac=sc, sherpar=sr)
-    # todo clear session["last_city"] on city-info page to prevent locking user in
+    ada = User.query.get(1)
+    # ada = ada.make_dict()
+
+    saved = False 
+    for uc in ada.user_cities: 
+        if city_dict["city_id"] == uc.city.city_id:
+            saved = True
+    
+    return render_template("city-info.html", city=city_dict, user=ada, saved=saved,
+                            sherpac=sc, sherpar=sr, sherpap=sp)
+    # * clear session["last_city"] on city-info page to prevent locking user in
 
 
 @app.route("/city-search")
@@ -165,6 +174,7 @@ def save_city():
     # connect_userid = request.form.get("user")
     connect_userid = 1 #FIXME: handle real user
     connect_cityid = request.form.get("save-btn")
+
     print(f"connecting user:{connect_userid} to city:{connect_cityid}...")
 
     # make usercity record 
@@ -189,22 +199,22 @@ def unsave_city():
 
     rm_userid = 1 #FIXME: handle real user
     rm_cityid = request.form.get("unsave-btn")
+    hidden_info = request.form.get("user-id")
 
     delete_user_city(rm_userid, rm_cityid)
     # -> removes matching usercity record (one or all? PLSCHECK) 
 
-    q = UserCity.query
-    uc = q.filter((UserCity.user_id==rm_userid) & 
-                  (UserCity.city_id==rm_cityid))
-
-    if uc.count() == 0:
+    try:
+        get_one_usercity(rm_userid,rm_cityid)
+    except:
         confirm = "success"
     else: 
         confirm = "failed"
 
     print(f"unsave city operation: {confirm}")
+    return confirm
 
-    return redirect(request.referrer)
+    # return redirect(request.referrer)
 
 
 # =======================================

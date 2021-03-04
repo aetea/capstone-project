@@ -16,6 +16,10 @@ div.row div {
     padding: 10px;
 }
 
+.hide {
+    display: none;
+}
+
 #header-bar div {
     display: inline-block;
 }

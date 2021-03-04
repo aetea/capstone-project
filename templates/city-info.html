@@ -40,15 +40,18 @@
         </div>
         
         <div class="row">
+
             <div id="city-info">
                 <p>Here's some info about it...</p>
                 <p id="country">Country: {{ city["tele_country_name"].title() }}</p>
                 <p><em>display city_dict info</em></p>
                 <p>{{ city }}</p>
             </div>
+
             <div id="sherpa-country"><em>display sherpa country info</em>
                 <p>{{ sherpac["attributes"] }}</p> 
             </div>
+
             <div id="restrictions"><em>display restrictions</em>
                 <ul>{% for r in sherpar %}
                     {% if "international" == r["attributes"]["tags"][0] %}
@@ -59,25 +62,41 @@
                     {% endfor %}
                 </ul>
             </div>
+
+            <div id="procedures"><em>display procedures</em>
+                <ul>{% for p in sherpap %}
+                    {# if "international" == p["attributes"]["tags"][0] #}
+                        <li><strong>{{ p["attributes"]["title"] }}</strong>
+                        {{ p["attributes"]["description"] }}
+                        || cat: {{ p["attributes"]["category"] }}
+                        || subcat: {{ p["attributes"]["subcategory"] }}
+                        || severity: {{ p["attributes"]["severity"] }}
+                        || <a href="{{ p["attributes"]["source"]["url"] }}">source</a>
+                        || tags: {{ p["attributes"]["tags"] }}</li>
+                    {# {% endif %} #}
+                    {% endfor %}
+                </ul>
             </div>
-            <div id="city-photo"><img src="{{city["img_link"]}}" alt="city-image"></div>
+
+            <div id="city-photo"><img src="{{ city["img_link"]}}" alt="city-image"></div>
         </div>
 
-        <div class="button" id="save-btn">
-            {% if ns.saved == false %}
-                <form action="/save-city" method="POST">
-                    <button name="save-btn" value={{city["city_id"]}}>
-                        Fav {{ city["tele_city_name"] }}
-                    </button>
-                </form>
-            {% else %}
-                *** Already saved city ***
-                <form action="/unsave-city" method="POST">
-                    <button name="unsave-btn" value={{city["city_id"]}}>
-                        Unfave
-                    </button>
-                </form>
-            {% endif %}
+        <div id="save-options">
+            <form action="/save-city" method="POST">
+                <button id="save-btn" name="save-btn" value="{{ city["city_id"] }}"
+                class={{ "show" if saved==False else "hide" }}>
+                    Save {{ city["tele_city_name"] }}
+                </button>
+
+                <button id="unsave-btn" name="unsave-btn" value="{{ city["city_id"] }}"
+                class={{ "show" if saved==True else "hide" }}>
+                    *** Already saved city ***
+                    Un-save {{ city["tele_city_name"] }}
+                </button>
+
+                {# a checkbox for marking pastLocal here #}
+                <input type="hidden" id="h-uid" name="user-id" value="1">
+            </form>
         </div>
 
         
@@ -108,9 +127,13 @@
 
     {% endif %}
 
-    {# 
-    <script src="http://code.jquery.com/jquery.js"></script>
-    <script src="/static/ajax.js"></script> 
-    #}
+{% endblock %}
 
+{% block scripts %}
+
+    <script>
+    const userId = JSON.parse({{ user.user_id | tojson }});
+    </script>
+    <script src="/static/ajax.js"></script> 
+    
 {% endblock %}

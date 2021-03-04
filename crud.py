@@ -85,6 +85,16 @@ def connect_one_usercity(userid, cityid, status="future"):
 #       Read Functions 
 # =========================================
 
+def get_one_usercity(userid, cityid):
+    """Get one usercity connection given ids.""" 
+
+    q = UserCity.query
+    uc = q.filter((UserCity.user_id == userid) & 
+                  (UserCity.city_id == cityid)).one()
+
+    return uc
+
+
 def get_user_cities(user, status="all"):
     """Get city connections for a user, optionally filter by status."""
     # returns [uc.city_id, uc.city_name, uc.user_status]
