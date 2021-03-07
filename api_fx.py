@@ -22,6 +22,7 @@ def make_basic_dict(res_dict):
     # pprint(res_dict)
 
     latlon = res_dict["location"]["latlon"]
+    print(f"[make_basic_dict] latlon is {latlon}")
 
     city_basics = {
         "geoid": res_dict["geoname_id"],

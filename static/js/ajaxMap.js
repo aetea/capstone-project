@@ -19,19 +19,32 @@ function initMap() {
     let tpeCoords = {lat: 25.04776, lng: 121.53185 };
 
     const map = new google.maps.Map(document.getElementById("map"), {
-    zoom: 4,
+    zoom: 1.5,
     center: tpeCoords,
     });
+    
+    markers = addSavedCities(userObj, map);
+    addEventListeners(markers, map);    
+    // ? --> have to manually pass map in, or markers don't appear. why? 
+}
 
-    // new google.maps.Marker({
-    //     position: tpeCoords,
-    //     map: map,
-    //     title: "Hello World!",
-    // });
+// ========== ADD USER SAVES FUNCTIONS ==============
 
-    // addSavedCities(userObj);
+function getCityPos(city) {
+    console.log(city)
 
-    let markers = []
+    let LatLongStr = city[4]   // string "(25.04776,121.53185)"
+    let LatLong = LatLongStr.slice(1,-1).split(",");
+    let coords = {lat: parseFloat(LatLong[0]), 
+                  lng: parseFloat(LatLong[1]) };
+    console.log(`coords ${coords["lat"]} ${coords["lng"]}`);
+
+    return coords;
+}
+
+function addSavedCities(user, map) {
+
+    let markers = [];
 
     for (const city of userObj["saved"]) {
         console.log(city)
@@ -46,66 +59,32 @@ function initMap() {
             map: map, 
             title: city[0]
         }); 
-
-        markers.push(marker)
+        markers.push(marker);
     }
 
-    // add listener and info
+    return markers;
+}
+
+function addEventListeners(markers, map) {
+
     for (const mark of markers) {
+
+        console.log(`now on ${mark.title} at ${mark.position.lat()}, 
+                                             ${mark.position.lng()}`);
+
         const markerInfo = mark.title;
         const infoWindow = new google.maps.InfoWindow({
             content: markerInfo, 
             maxWidth: 200
         });
 
-        console.log(mark.position);
-
-        marker.addListener('click', () => {
-            infoWindow.open(map, marker);
+        mark.addListener('click', () => {
+            infoWindow.open(map, mark);
+            currentInfoWindow.close();
+            currentInfoWindow = infoWindow;
         });
     };
-    
 }
-
-// ========== ADD USER SAVES FUNCTIONS ==============
-
-function addSavedCities(user) {
-
-    // get citylatlong and create markers
-    for (const city of user["saved"]) {
-        console.log(city)
-
-        let LatLongStr = city[4]   // string "(25.04776,121.53185)"
-        let LatLong = LatLongStr.slice(1,-1).split(",");
-        let coords = {lat: parseFloat(LatLong[0]), lng: parseFloat(LatLong[1]) };
-        console.log(`coords ${coords["lat"]} ${coords["lng"]}`);
-
-        marker = new google.maps.Marker({
-            position: coords,
-            map: map, 
-            title: city[0]
-        });
-
-        // // makeInfoWindow(marker)
-        const markerInfo = marker.title;
-        const infoWindow = new google.maps.InfoWindow({
-            content: markerInfo, 
-            maxWidth: 200
-        });
-        marker.addListener('click', () => {
-            infoWindow.open(map, marker);
-        });
-    }
-
-}
-
-// set marker info and listener
-// function makeInfoWindow(marker) {
-//     const markerInfo = marker.title;
-//     const infoWindow = new google.maps.InfoWindow({content:markerInfo});
-//     marker.addListener('click', () => {infoWindow.open(map, marker);});
-// }
-
 
 // * differentiate general vs past_local
 // use different markers for past vs general 

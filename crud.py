@@ -18,11 +18,11 @@ def make_some_users(n):
         new_users.append(user)
 
 
-def add_city(city_name, country_code, teleport_id, urban_area=None):
+def add_city(city_name, country_code, teleport_id, urban_area=None, latlon=None):
     """Basic function to add a city to db."""
 
     city = City(city_name=city_name, country_code=country_code, 
-                teleport_id=teleport_id, urban_area=urban_area)
+                teleport_id=teleport_id, urban_area=urban_area, latlon=latlon)
 
     print(f">> before trying to init this city: {city}")
     db.session.add(city)
@@ -37,10 +37,12 @@ def add_city_db(city_basics_dict):
 
     cname = city_basics_dict["tele_city_name"]
     tid = city_basics_dict["geoid"]
-    urban_area = city_basics_dict["urban_area"]
+    ua = city_basics_dict["urban_area"]
     ccode = city_basics_dict["country_iso"]
+    latlon = city_basics_dict["latlon"]
     
-    city = add_city(cname, ccode, tid, urban_area)
+    city = add_city(city_name=cname, urban_area=ua, country_code=ccode, 
+                    teleport_id=tid, latlon=latlon)
 
     return city
 

@@ -1,4 +1,4 @@
-alert("hi from cityMap.js");
+// alert("hi from cityMap.js");
 
 // =========  simple no-geolocation map  ============
 // centered on this city (and has places search?)
