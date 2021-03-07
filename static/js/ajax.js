@@ -60,6 +60,7 @@ function unsaveCity(userId, cityId) {
             // update button
             $("#save-btn").attr("class", "show");
             $("#unsave-btn").attr("class", "hide");
+            $("#pastlocal-div").attr("class", "hide");
         } else {
             alert("uhoh! sorry, that did not work");
         };
