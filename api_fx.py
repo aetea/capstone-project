@@ -21,12 +21,15 @@ def make_basic_dict(res_dict):
     print(f"[make_basic_dict] received res_dict:")
     # pprint(res_dict)
 
+    latlon = res_dict["location"]["latlon"]
+
     city_basics = {
         "geoid": res_dict["geoname_id"],
         "tele_full_name": res_dict["full_name"],
         "tele_city_name": res_dict["name"],
         "tele_country_name": res_dict[emb]["city:country"]["name"],
         "country_iso": res_dict[emb]["city:country"]["iso_alpha3"],
+        "latlon": (latlon["latitude"], latlon["longitude"])
     }
 
     return city_basics

@@ -37,6 +37,15 @@ def index():
     
     return render_template("index.html", user=ada) 
 
+
+@app.route("/map")
+def map():
+    """Show map only page."""
+    ada = User.query.get(1)
+    
+    return render_template("map-only.html", user=ada) 
+
+
 @app.route("/profile/<user_id>")
 def profile(user_id):
     """Show profile for given user."""
@@ -148,23 +157,6 @@ def search_city():
     # else render page for city-picker, show all cities
     else:
         return render_template("search-results.html", results=tele_res, user=ada)
-        # return "many results found. show all results here for user to pick."
-
-
-# @app.route("/api/city")
-# def city_api():
-#     """Return city information only."""
-
-#     city_name = request.args.get("cname")
-#     print(" * " * 15)
-#     print("got a city_name: {}".format(city_name))
-
-#     city_dict = api_fx.get_city_api(city_name) 
-
-#     print("found a city object: {}".format(city_dict))
-#     print(" * " * 15)
-
-#     return jsonify(city_dict)
 
 
 # ========== Save / Unsave City ============
@@ -184,12 +176,10 @@ def save_city():
     print(f"connecting user:{connect_userid} to city:{connect_cityid} as {status}")
 
     # make usercity record 
-    # connect_one_usercity(connect_userid, connect_cityid) 
     usercity = update_status(connect_userid, connect_cityid, status)
     confirm = "success" if usercity else "failed"
 
     return confirm
-    # return "troubleshooting :("
 
 
 @app.route("/unsave-city", methods=["POST"])

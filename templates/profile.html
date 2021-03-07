@@ -1,49 +1,63 @@
 {% extends "base.html" %}
 
+{% block head %}{% endblock %}
+
 {% block title %}  {% endblock %}
 
 {% block body %}
 
-<div class="row">{{ user_dict }}</div>
-<div class="row" id="user_info">
-    <div><img src="/static/user-images/hair_innercolor.png" alt="profile photo" id="user-photo"></div>
-    <div>
-        <p>name: {{ user_dict.first }} {{ user_dict.last }} </p>
-        <p>email: {{ user_dict.email }}</p>
-        <p>current city: 
-            {% if user_dict.current_city %} 
-                {{user_dict.current_city}} <a href="">(edit city)</a>
-            {% else %} 
-                <a href="">(add city)</a>
-            {% endif %}
-        </p> 
-    </div> 
-</div>
-
-<div class="row" id="my_cities">
-    
-    <div><ul> saved cities: 
-            {% for city in user_dict.saved %}
-                <li><a href="/city-info/{{ city[2] }}/{{ city[0] }}">
-                    {{ city }}
-                </a></li>
-            {% endfor %}
-    </ul></div>
-
-    <div>
-        city passport<br />
-        <img src="/static/site-images/passport_rinji.png" alt="passport image">
+    <div class="row">{{ user_dict }}</div>
+    <div class="row" id="user_info">
+        <div><img src="/static/user-images/hair_innercolor.png" alt="profile photo" id="user-photo"></div>
+        <div>
+            <p>name: {{ user_dict.first }} {{ user_dict.last }} </p>
+            <p>email: {{ user_dict.email }}</p>
+            <p>current city: 
+                {% if user_dict.current_city %} 
+                    {{user_dict.current_city}} <a href="">(edit city)</a>
+                {% else %} 
+                    <a href="">(add city)</a>
+                {% endif %}
+            </p> 
+        </div> 
     </div>
-</div>
 
-<div>
+    <div class="row" id="my_cities">
+        
+        <div><ul> saved cities: 
+                {% for city in user_dict.saved %}
+                    <li><a href="/city-info/{{ city[2] }}/{{ city[0] }}">
+                        {{ city }}
+                    </a></li>
+                {% endfor %}
+        </ul></div>
+
+        <div>
+            city passport<br />
+            <img src="/static/site-images/passport_rinji.png" alt="passport image">
+        </div>
+    </div>
+
+    <h2> map of saved cities </h2>
     <p>google map of all associated cities</p>
     <p>show two groups of pins: saved cities and past local + current </p>
-</div>
+    <div id="map"></div>
 
 
 {% endblock %}
 
-{% block scripts %} {% endblock %}
+{% block scripts %} 
+
+<script>
+    let userObj = {{ user_dict|tojson }};
+</script>
+
+
+<script src="/static/js/ajaxMap.js"></script>
+<script
+  async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVRRwEZBjAe9DnCGtwPZs-imnBPhpMuGo&callback=initMap">
+</script>
+{% endblock %}
 
 {% set active_page = "profile" %}

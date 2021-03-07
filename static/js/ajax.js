@@ -93,33 +93,3 @@ $("#unsave-btn").on("click", (evt) => {      // callback function
 
 });
 
-
-
-
-
-// ============== OLD FUNCTIONS ================
-
-// function to allow users to save city as a fav
-
-// function saveCity(cityId) {
-//     // add usercity to database [server POST request]
-//     console.log(`entered jsfunc saveCity with cityId: ${cityId}`);
-
-//     const connectionData = {
-//         "user": 1,      // TODO: make this handle a real user 
-//         "cityId": cityId
-//     };
-
-//     console.log(`sending connectionData as: ${connectionData}`)
-
-//     $.post("/save-city", connectionData, (res) => {
-//         if (res === "success") {
-//             alert(`Faved cityid: ${cityId}!`);
-//             // alert(`${res}`)
-//         } else {
-//             alert("Hi from save-city js. Save failed.");
-//         }
-//     });
-
-//     // update "save" element to indicate saved status [DOM]
-// };

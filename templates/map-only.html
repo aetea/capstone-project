@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block head %} {% endblock %}
+
+{% block title %}  {% endblock %}
+
+{% block body %}
+<p>
+this is a test
+</p>
+
+<div id="map"></div>
+
+
+{% endblock %}
+
+{% block scripts %} 
+{# <script src="/static/js/ajaxMap.js"></script> #}
+<script>
+    function initMap() {
+        const sfBay = {lat: 37.601773, lng: -122.202870}; 
+        const basicMap = new google.maps.Map(
+            document.querySelector("#map"), {
+                center: sfBay,
+                zoom: 10
+            });
+      }
+            
+</script>
+
+<script
+  async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVRRwEZBjAe9DnCGtwPZs-imnBPhpMuGo&callback=initMap">
+</script>
+
+{% endblock %}
+
+{% set active_page = "map-only" %}

@@ -128,6 +128,9 @@
         {% endfor %}
     </ul></div>
 
+    < city map here >
+    <div id="map"></div>
+
     {% endif %}
 
 {% endblock %}
@@ -136,8 +139,15 @@
 
     <script>
     const userId = JSON.parse({{ user.user_id | tojson }});
+    let cityLat = {{ city["latlon"][0] }};
+    let cityLon = {{ city["latlon"][1] }};
+    let cityObj = {{ city | tojson }};
     </script>
-    <script src="/static/ajax.js"></script> 
-    <!-- <script src="/static/ajaxSave.js"></script>  -->
+
+    <script src="/static/js/ajax.js"></script> 
+    <script src="/static/js/cityMap.js"></script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVRRwEZBjAe9DnCGtwPZs-imnBPhpMuGo&libraries=places&callback=initMap">
+    </script>
     
 {% endblock %}

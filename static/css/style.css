@@ -20,6 +20,11 @@ div.row div {
     display: none;
 }
 
+#map {
+    height: 400px;
+    width: 50%;
+}
+
 #header-bar div {
     display: inline-block;
 }

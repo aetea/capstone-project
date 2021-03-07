@@ -37,7 +37,8 @@ class User(db.Model):
 
         # get list of cities saved
         saved_cities = [(uc.city.city_name, uc.city.city_id, 
-                        uc.city.country_code, uc.city.country.name) 
+                        uc.city.country_code, uc.city.country.name, 
+                        uc.city.latlon) 
                         for uc in self.user_cities ]
 
         dict = {
@@ -45,7 +46,7 @@ class User(db.Model):
             "first": self.first_name, 
             "last": self.last_name, 
             "email": self.email, 
-            "saved": saved_cities    # [(cname, cid, ccode, ctry), (...)]
+            "saved": saved_cities    # [(cname, cid, ccode, ctry, latlon)]
         }
 
         return dict
@@ -90,6 +91,7 @@ class City(db.Model):
     urban_area = db.Column(db.String)
     country_code = db.Column(db.String, db.ForeignKey('countries.isocode3'))
     teleport_id = db.Column(db.Integer)    # geoname_id in teleport API
+    latlon = db.Column(db.String)
     # ? add urban_id from teleport?
 
     # ------ relationships -------
@@ -99,7 +101,7 @@ class City(db.Model):
     def __repr__(self):
         return f'<City city_id={self.city_id} city_name={self.city_name} '\
                 f'urban_area={self.urban_area} country={self.country_code} '\
-                f'teleport_id={self.teleport_id}>'
+                f'teleport_id={self.teleport_id} latlon={self.latlon}>'
 
 
     def make_dict(self):

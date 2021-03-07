@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="shortcut icon" href="/static/favicon.ico">
 
+    {% block head %} {% endblock %}
+
     <title>{% block title %} REPLACE TITLE {% endblock %}</title>
 </head>
 <body>
@@ -33,8 +35,8 @@
                 Ada (replace)
                 <img src="/static/user-images/hair_innercolor.png" alt="">
             </a>
-        </div>
-        {% endif %}
+        </div> 
+        {% endif %} 
         
         <hr>
 
@@ -42,14 +44,14 @@
 
     {% block body %} REPLACE BODY CONTENT {% endblock %}
     
+    
+    <script src="http://code.jquery.com/jquery.js"></script> 
+    
+    {% block scripts %} 
+    
+    SCRIPTS GO HERE 
+    
+    {% endblock %}
 </body>
-
-<script src="http://code.jquery.com/jquery.js"></script>
-
-{% block scripts %} 
-
-SCRIPTS GO HERE 
-
-{% endblock %}
 
 </html>

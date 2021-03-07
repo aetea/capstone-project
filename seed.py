@@ -51,15 +51,17 @@ def make_test_countries():
 def make_test_cities():
     """Create some cities for testing."""
     cities = {
-        'San Francisco': {'ccode': 'USA', 'tid': 5391959, 'urban_area': 'Bay Area'},
-        'London': {'ccode':'GBR', 'tid': 2643743}, 
-        'Paris': {'ccode': 'FRA', 'tid': 2988507},
-        'Taipei': {'ccode': 'TWN', 'tid': 1668341}
+        'San Francisco': {'ccode': 'USA', 'tid': 5391959, 'urban_area': 'Bay Area', 
+                          'latlon': (37.77493, -122.41942)},
+        'London': {'ccode':'GBR', 'tid': 2643743, 'latlon': (51.50853, -0.12574)}, 
+        'Paris': {'ccode': 'FRA', 'tid': 2988507, 'latlon': (48.85341, 2.3488)},
+        'Taipei': {'ccode': 'TWN', 'tid': 1668341, 'latlon': (25.04776, 121.53185)}
     }
 
     for c, cinfo in cities.items():
         city = City(city_name=c, urban_area=cinfo.get('urban_area'), 
-                    teleport_id=cinfo.get('tid'), country_code=cinfo['ccode'])
+                    teleport_id=cinfo.get('tid'), country_code=cinfo['ccode'], 
+                    latlon=cinfo.get('latlon'))
         db.session.add(city)
 
     db.session.commit()
