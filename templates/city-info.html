@@ -59,7 +59,10 @@
     <!-- put the rest of the page in a container -->
     <div class="container">
         <div class="row"><h1>{{ city["tele_city_name"].title() }}</h1></div>
-        <div class="row alert alert-warning">country alert</div>
+        <div class="row alert alert-warning justify-content-between">
+            <div class="col-8">country alert</div> 
+            <div class="col"><a href="#travel">jump to travel advisories</a></div>
+        </div>
         <div class="row" id="city-info-save">
             <div class="col-8">
                 <p>city blurb blah blah blah put some description here</p>
@@ -144,9 +147,8 @@
             </div>
         </div>
         <hr class="featurette-divider">
-        <div class="row">
-            <h2>travel advisories</h2>
-        </div>
+        <div class="row"><h2>travel advisories</h2></div>
+        <div class="row"><h3>restrictions</h3></div>
         <div class="accordion" id="accordionExample">
             {% for r in sherpar %}
                 {% if "international" == r["attributes"]["tags"][0] %}
@@ -165,23 +167,35 @@
                 {% endif %}
             {% endfor %}
         </div>
+        <div class="row"><h3>procedures</h3></div>
+        <div class="accordion" id="paccordian">
+            {% for p in sherpap %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="phead{{loop.index}}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pcollapse{{loop.index}}" aria-expanded="false" aria-controls="pcollapse{{loop.index}}">
+                            {{ p["attributes"]["title"] }}
+                        </button>
+                    </h2>
+                    <div id="pcollapse{{loop.index}}" class="accordion-collapse collapse" aria-labelledby="phead{{loop.index}}" data-bs-parent="#paccordian">
+                        <div class="accordion-body">
+                            {{ p["attributes"]["description"] }} 
+                            || severity: {{ p["attributes"]["severity"] }}
+                            || cat: {{ p["attributes"]["category"] }}
+                            || <a href="{{ p["attributes"]["source"]["url"] }}">source</a>
+                            || tags: {{ p["attributes"]["tags"] }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
+
+    <hr class="featurette-divider">
 
     <!-- section 1: country travel warnings -->
 
         <div id="sherpa-country"><em>display sherpa country info</em>
             <p>{{ sherpac["attributes"] }}</p> 
-        </div>
-
-        <div id="restrictions"><em>display restrictions</em>
-            <ul>{% for r in sherpar %}
-            {% if "international" == r["attributes"]["tags"][0] %}
-                <li><strong>{{ r["attributes"]["title"] }}</strong>
-                {{ r["attributes"]["description"] }}
-                tags: {{ r["attributes"]["tags"] }}</li>
-            {% endif %}
-            {% endfor %}
-            </ul>
         </div>
 
         <div id="procedures"><em>display procedures</em>
@@ -203,18 +217,6 @@
 
     <div id="city-photo"><img src="{{ city["img_link"]}}" alt="city-image"></div>
 
-    
-    <!-- section 2: safety score -->
-    <div> 
-        <p><em>display city_dict info</em></p>
-        <p>{{ city }}</p>
-    </div>
-
-    <div><ul>
-        {% for cat in city["scores"].items() %}
-            <li>{{ cat }}</li>
-        {% endfor %}
-    </ul></div>
 
     <!-- < city map here >
     <div id="map"></div> -->
@@ -224,13 +226,6 @@
 {% endblock %}
 
 {% block scripts %}
-    <!-- <script type="text/javascript">
-        $(document).ready(function() {
-            $('#cityCarousel').carousel({
-                interval: 600
-            })
-        });
-    </script> -->
 
     <script>
     const userId = JSON.parse({{ user.user_id | tojson }});

@@ -177,7 +177,7 @@ def sherpa_all_countries():
     }
 
     print("*** fetching countries from sherpa API ***")
-    res = requests.get(SHERPA_ROOT+"countries", params=payload)
+    res = requests.get(SHERPA_ROOT+"countries", params=payload, verify=False)
     res_dict = res.json()
 
     return res_dict 
@@ -192,7 +192,7 @@ def sherpa_country_request(ccode):
     }
 
     print("*** fetching country from sherpa API ***")
-    res = requests.get("https://requirements-api.sandbox.joinsherpa.com/v2/countries", params=payload)
+    res = requests.get("https://requirements-api.sandbox.joinsherpa.com/v2/countries", params=payload, verify=False)
     res_dict = res.json()
 
     return res_dict 
@@ -216,7 +216,7 @@ def sherpa_restrictions(ccode):
     }
 
     print("*** fetching restrictions from sherpa API ***")
-    res = requests.get(SHERPA_ROOT+"restrictions", params=payload)
+    res = requests.get(SHERPA_ROOT+"restrictions", params=payload, verify=False)
     res_dict = res.json()
 
     return res_dict 
@@ -240,7 +240,7 @@ def sherpa_procedures(ccode):
     }
 
     print("*** fetching procedures from sherpa API ***")
-    res = requests.get(SHERPA_ROOT+"procedures", params=payload)
+    res = requests.get(SHERPA_ROOT+"procedures", params=payload, verify=False)
     res_dict = res.json()
 
     return res_dict 
