@@ -25,20 +25,147 @@
     
 {% if city %} 
 
-    <!-- section 0: city name and photo -->
-
-    <div>
-        <h1 id="city-header">{{ city["tele_city_name"].title() }}</h1>
-    </div>
-    
-    <div class="row">
-
-        <div id="city-info">
-            <p>Here's some info about it...</p>
-            <p id="country">Country: {{ city["tele_country_name"].title() }}</p>
-            <p><em>display city_dict info</em></p>
-            <p>{{ city }}</p>
+    <!-- photo carousel -->
+    <div id="cityCarousel" class="carousel slide" data-bs-ride="carousel">
+        <!-- show carousel indicators -->
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#cityCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#cityCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#cityCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
         </div>
+        <!-- put 3 images in the carousel -->
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="/static/city-images/bundo-kim-p_D5pbQG5TE-unsplash.jpg" class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img src="/static/city-images/yeo-khee--e6Xu27_T50-unsplash.jpg" class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img src="/static/city-images/zequn-gui-xVFS3meofYM-unsplash.jpg" class="d-block w-100" alt="...">
+            </div>
+        </div>
+        <!-- add next/prev buttons to carousel -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#cityCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#cityCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- put the rest of the page in a container -->
+    <div class="container">
+        <div class="row"><h1>{{ city["tele_city_name"].title() }}</h1></div>
+        <div class="row alert alert-warning">country alert</div>
+        <div class="row" id="city-info-save">
+            <div class="col-8">
+                <p>city blurb blah blah blah put some description here</p>
+                <p>Here's some info about it...</p>
+                <p id="country">Country: {{ city["tele_country_name"].title() }}</p>
+            </div>
+            <div class="col-4">
+                <form action="/save-city" method="POST">
+
+                    <div id="save-buttons">
+                        <button id="save-btn" name="save-city" value="{{ city["city_id"] }}"
+                                class={{ "show" if saved[0]==False else "hide" }}>
+                            Bookmark {{ city["tele_city_name"] }}
+                        </button>
+            
+                        <button id="unsave-btn" name="unsave-city" value="{{ city["city_id"] }}"
+                                class={{ "show" if saved[0]==True else "hide" }}>
+                            Remove bookmark for {{ city["tele_city_name"] }}
+                        </button>
+                    </div>
+            
+                    {% if saved[0]==False %} {% set show_past="hide" %} {% endif %}
+                    {% if saved[1]=="past_local" %} {% set check="checked" %} {% endif %}
+                    <div id="pastlocal-div" class={{ show_past }}>
+                        <input type="checkbox" name="past-local" id="past-local-box" {{check}}>
+                        <label for="past-local">I've also been a local here!</label>
+                    </div>
+            
+                    <input type="hidden" id="h-uid" name="user-id" value="1">
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div class="row" id="city-bottom-half">
+                    <div class="flex-fill" id="map"></div>
+                </div>
+            </div>
+            <div class="col-4 flex-fill">
+                <div class="card-group d-flex">
+                    <div class="card text-center" id="safety">
+                        <div class="class-body">
+                        <h5 class="card-title">Safety</h5>
+                        <h3 class="card-text">{{ city["scores"]["Safety"] }}</h3>
+                        </div>
+                    </div>
+                    <div class="card text-center" id="cost">
+                        <div class="class-body">
+                        <h5 class="card-title">Cost of Living</h5>
+                        <h3 class="card-text">{{ city["scores"]["Cost of Living"] }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-group d-flex">
+                    <div class="card text-center" id="healthcare">
+                        <div class="class-body">
+                        <h5 class="card-title">Healthcare</h5>
+                        <h3 class="card-text">{{ city["scores"]["Healthcare"] }}</h3>
+                        </h3></div>
+                    </div>
+                    <div class="card text-center" id="internet">
+                        <div class="class-body">
+                        <h5 class="card-title">Internet Access</h5>
+                        <h3 class="card-text">{{ city["scores"]["Internet Access"] }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-group d-flex">
+                    <div class="card text-center" id="tolerance">
+                        <div class="class-body">
+                        <h5 class="card-title">Tolerance</h5>
+                        <h3 class="card-text">{{ city["scores"]["Tolerance"] }}</h3>
+                        </div>
+                    </div>
+                    <div class="card text-center" id="leisure">
+                        <div class="class-body">
+                        <h5 class="card-title">Leisure & Culture</h5>
+                        <h3 class="card-text">{{ city["scores"]["Leisure & Culture"] }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="featurette-divider">
+        <div class="row">
+            <h2>travel advisories</h2>
+        </div>
+        <div class="accordion" id="accordionExample">
+            {% for r in sherpar %}
+                {% if "international" == r["attributes"]["tags"][0] %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="head{{loop.index}}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{loop.index}}" aria-expanded="false" aria-controls="collapse{{loop.index}}">
+                            {{ r["attributes"]["title"] }}
+                        </button>
+                    </h2>
+                    <div id="collapse{{loop.index}}" class="accordion-collapse collapse" aria-labelledby="head{{loop.index}}" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            {{ r["attributes"]["description"] }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
 
     <!-- section 1: country travel warnings -->
 
@@ -76,50 +203,11 @@
 
     <div id="city-photo"><img src="{{ city["img_link"]}}" alt="city-image"></div>
 
-    <div id="save-options">
-    <form action="/save-city" method="POST">
-
-        <div id="save-buttons">
-            <button id="save-btn" name="save-city" value="{{ city["city_id"] }}"
-                    class={{ "show" if saved[0]==False else "hide" }}>
-                Bookmark {{ city["tele_city_name"] }}
-            </button>
-
-            <button id="unsave-btn" name="unsave-city" value="{{ city["city_id"] }}"
-                    class={{ "show" if saved[0]==True else "hide" }}>
-                Remove bookmark for {{ city["tele_city_name"] }}
-            </button>
-        </div>
-
-        {% if saved[0]==False %} {% set show_past="hide" %} {% endif %}
-        {% if saved[1]=="past_local" %} {% set check="checked" %} {% endif %}
-        <div id="pastlocal-div" class={{ show_past }}>
-            <input type="checkbox" name="past-local" id="past-local-box" {{check}}>
-            <label for="past-local">I've also been a local here!</label>
-        </div>
-
-        <input type="hidden" id="h-uid" name="user-id" value="1">
-    </form>
-    </div>
-
     
     <!-- section 2: safety score -->
-    <div class="scorebox" id="safety-field"> 
-        <h2>safety: {{ city["scores"]["Safety"] }}</h2>
-    </div>
-
-    <!-- section 2: cost of living -->
-    <div class="scorebox" id="cost-field">
-        <h2>cost of living: {{ city["scores"]["Cost of Living"] }}</h2>
-    </div>
-
-    <!-- section 3: quality of life -->
-    <div class="scorebox" id="culture-field">
-        <h2>leisure & culture: {{ city["scores"]["Leisure & Culture"] }}</h2>
-    </div>
-
-    <div class="scorebox" id="healthcare-field">
-        <h2>healthcare: {{ city["scores"]["Healthcare"] }} </h2>
+    <div> 
+        <p><em>display city_dict info</em></p>
+        <p>{{ city }}</p>
     </div>
 
     <div><ul>
@@ -128,14 +216,21 @@
         {% endfor %}
     </ul></div>
 
-    < city map here >
-    <div id="map"></div>
+    <!-- < city map here >
+    <div id="map"></div> -->
 
     {% endif %}
 
 {% endblock %}
 
 {% block scripts %}
+    <!-- <script type="text/javascript">
+        $(document).ready(function() {
+            $('#cityCarousel').carousel({
+                interval: 600
+            })
+        });
+    </script> -->
 
     <script>
     const userId = JSON.parse({{ user.user_id | tojson }});

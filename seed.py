@@ -19,7 +19,9 @@ def make_test_users():
 
     for name in test_fnames:
         email = f'{name}@test.tst'
-        user = User(first_name=name, last_name='test', email=email)
+        pw_clear = f'{name}{len(name)}'
+        pw_hash = server.generate_password_hash(pw_clear)
+        user = User(first_name=name, last_name='test', email=email, pw=pw_hash)
         db.session.add(user)
 
     db.session.commit()

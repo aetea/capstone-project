@@ -20,9 +20,17 @@ div.row div {
     display: none;
 }
 
+
+.carousel-item img {
+    object-fit: cover;
+
+    width: 100%;
+    height: 350px;
+}
+
 #map {
     height: 400px;
-    width: 50%;
+    width: 500px;
 }
 
 #header-bar div {
@@ -32,6 +40,7 @@ div.row div {
 #header-bar h1, p {
     margin: 5px 15px;
 }
+
 
 #user-photo {
     width: 100px;

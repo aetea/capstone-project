@@ -11,6 +11,7 @@ from pprint import pprint
 # imports for app server
 from flask import Flask, request, render_template, redirect, session, \
                   jsonify, json
+from werkzeug.security import generate_password_hash, check_password_hash
 from model import db, connect_to_db, User, City, UserCity, Country
 from crud import add_city_db, connect_one_usercity, delete_user_city, \
                     get_one_usercity, get_user_cities, get_city_users, \
@@ -36,6 +37,22 @@ def index():
     ada = User.query.get(1)
     
     return render_template("index.html", user=ada) 
+
+
+@app.route("/login", methods=["POST"])
+def login():
+    """Check login details provided."""
+    email = request.form.get("email_field")
+    user = User.query.filter_by(email=email)    # get User obj
+
+    pw_entered = request.form.get("pw_field")
+    result = check_password_hash(user.pw, pw_entered)
+
+    if result == True:
+        return "welcome!"
+    else:
+        # return str(result)
+        return "please try again."
 
 
 @app.route("/map")

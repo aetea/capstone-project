@@ -14,6 +14,7 @@ class User(db.Model):
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
+    pw = db.Column(db.String, nullable=False)
     # username = db.Column(db.String)     
     # ~~~ ASK> optional username? or use another table for usernames
     # current_city = db.Column(db.String, nullable=False) 
