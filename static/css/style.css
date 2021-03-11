@@ -8,6 +8,12 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 0;
 }
 
+.navbar-brand {
+    /* font-family: 'Bungee Outline', cursive; */
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: xx-large;
+}
+
 .sec-head {
     padding: 20px 0;
 }
