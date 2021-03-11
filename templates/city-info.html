@@ -58,7 +58,7 @@
 
     <!-- put the rest of the page in a container -->
     <div class="container">
-        <div class="row"><h1>{{ city["tele_city_name"].title() }}</h1></div>
+        <div class="row sec-head"><h1>{{ city["tele_city_name"].title() }}</h1></div>
         <div class="row alert alert-warning justify-content-between">
             <div class="col-8">country alert</div> 
             <div class="col"><a href="#travel">jump to travel advisories</a></div>
@@ -157,8 +157,8 @@
             <!-- </div> -->
         </div>
         <hr class="featurette-divider">
-        <div class="row" id="travel"><h2>travel advisories</h2></div>
-        <div class="row"><h3>restrictions</h3></div>
+        <div class="row sec-head" id="travel"><h2>✈️ travel advisories</h2></div>
+        <div class="row sec-head"><h3>restrictions</h3></div>
         <div class="accordion" id="accordionExample">
             {% for r in sherpar %}
                 {% if "international" == r["attributes"]["tags"][0] %}
@@ -177,7 +177,7 @@
                 {% endif %}
             {% endfor %}
         </div>
-        <div class="row"><h3>procedures</h3></div>
+        <div class="row sec-head"><h3>procedures</h3></div>
         <div class="accordion" id="paccordian">
             {% for p in sherpap %}
                 <div class="accordion-item">
