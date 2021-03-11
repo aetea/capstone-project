@@ -12,17 +12,22 @@
         background-repeat: no-repeat;
         background-position: center center;
     }
+    h2 {
+        margin-bottom: 15px;
+    }
 </style>
 
 <div class="container-fluid" id="home-body">
 
     <div class="container">
-        <form action="/city-search" class="position-absolute top-50 start-50 translate-middle"
+        <div class="row">
+        <form action="/city-search" class="col-4 position-absolute top-50 start-50 translate-middle"
               id="home-form">
-            <p><label for="city-search">Where in the world would you like to go?</label></p>
-            <p><input type="text" name="city-search" id="homepage-search">
-            <button class="btn btn-outline-success" type="submit">Go!</button></p>
+            <h2><label for="city-search">Where in the world would you like to go?</label></h2>
+            <input type="text" name="city-search" id="homepage-search">
+            <button class="btn btn-outline-success" type="submit">Take me there</button>
         </form>
+        </div>
     </div>
 
 </div>
