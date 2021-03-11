@@ -53,6 +53,20 @@ div.scorebox {
     height: 400px;
 }
 
+.footer {
+    background-color: #b2ffa9;
+    height: 10vh;
+}
+
+#home-body {
+    height: 80vh;
+}
+
+#home-form {
+    background-color: white;
+    padding: 10px 20px;
+}
+
 /* #header-bar div {
     display: inline-block;
 }
