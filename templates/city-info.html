@@ -89,21 +89,6 @@
                     <div id="pastlocal-div" class={{ show_past }}>
                         <input type="checkbox" name="past-local" id="past-local-box" {{check}}>
                         <label for="past-local">I've also lived here</label>
-                        <!-- <button type="button" class="btn btn-primary" id="liveToastBtn">Show live toast</button> -->
-
-                        <!-- <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
-                        <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
-                            <div class="toast-header">
-                            <img src="..." class="rounded me-2" alt="...">
-                            <strong class="me-auto">Bootstrap</strong>
-                            <small>11 mins ago</small>
-                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                            </div>
-                            <div class="toast-body">
-                            Hello, world! This is a toast message.
-                            </div>
-                        </div>
-                        </div> -->
                     </div>
             
                     <input type="hidden" id="h-uid" name="user-id" value="1">
@@ -111,56 +96,65 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-8">
-                <div class="row" id="city-bottom-half">
-                    <div class="flex-fill" id="map"></div>
+            <div class="col-8 my-3">
+                <div class="flex-fill" id="map"></div>
+            </div>
+            <div class="col" id="city-right">
+                <div class="row row-cols-2">
+                    <div class="col">
+                        <div class="card text-center my-3" id="safety">
+                            <h5 class="card-header">Safety</h4>
+                            <div class="class-body">
+                            <!-- <h5 class="card-title">Safety</h5> -->
+                            <h3 class="card-text">{{ city["scores"]["Safety"] }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card text-center my-3" id="healthcare">
+                            <h5 class="card-header">Healthcare</h5>
+                            <div class="class-body">
+                            <h3 class="card-text">{{ city["scores"]["Healthcare"] }}</h3>
+                            </h3></div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card text-center my-3" id="tolerance">
+                            <h5 class="card-header">Tolerance</h5>
+                            <div class="class-body">
+                            <h3 class="card-text">{{ city["scores"]["Tolerance"] }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card text-center my-3" id="cost">
+                            <h5 class="card-header">Cost of Living</h5>
+                            <div class="class-body">
+                            <h3 class="card-text">{{ city["scores"]["Cost of Living"] }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card text-center my-3" id="internet">
+                            <h5 class="card-header">Internet Access</h5>
+                            <div class="class-body">
+                            <h3 class="card-text">{{ city["scores"]["Internet Access"] }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card text-center my-3" id="leisure">
+                            <h5 class="card-header">Leisure & Culture</h5>
+                            <div class="class-body">
+                            <h3 class="card-text">{{ city["scores"]["Leisure & Culture"] }}</h3>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-4 flex-fill">
-                <div class="card-group d-flex py-3">
-                    <div class="card text-center" id="safety">
-                        <h5 class="card-header">Safety</h4>
-                        <div class="class-body">
-                        <!-- <h5 class="card-title">Safety</h5> -->
-                        <h3 class="card-text">{{ city["scores"]["Safety"] }}</h3>
-                        </div>
-                    </div>
-                    <div class="card text-center" id="cost">
-                        <h5 class="card-header">Cost of Living</h5>
-                        <div class="class-body">
-                        <h3 class="card-text">{{ city["scores"]["Cost of Living"] }}</h3>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-group d-flex py-3">
-                    <div class="card text-center" id="healthcare">
-                        <h5 class="card-header">Healthcare</h5>
-                        <div class="class-body">
-                        <h3 class="card-text">{{ city["scores"]["Healthcare"] }}</h3>
-                        </h3></div>
-                    </div>
-                    <div class="card text-center" id="internet">
-                        <h5 class="card-header">Internet Access</h5>
-                        <div class="class-body">
-                        <h3 class="card-text">{{ city["scores"]["Internet Access"] }}</h3>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-group d-flex py-3">
-                    <div class="card text-center" id="tolerance">
-                        <h5 class="card-header">Tolerance</h5>
-                        <div class="class-body">
-                        <h3 class="card-text">{{ city["scores"]["Tolerance"] }}</h3>
-                        </div>
-                    </div>
-                    <div class="card text-center" id="leisure">
-                        <h5 class="card-header">Leisure & Culture</h5>
-                        <div class="class-body">
-                        <h3 class="card-text">{{ city["scores"]["Leisure & Culture"] }}</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- <div class="col-2"> -->
+
+            <!-- </div> -->
         </div>
         <hr class="featurette-divider">
         <div class="row" id="travel"><h2>travel advisories</h2></div>
