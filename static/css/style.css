@@ -4,14 +4,21 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Rufina', serif;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .sec-head {
-    padding: 15px 0;
+    padding: 20px 0;
+}
+
+.card-subtitle {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 .card-text {
-    padding: 15px 0;
+    padding: 1rem 0;
 }
 
 div.scorebox {

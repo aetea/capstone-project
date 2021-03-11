@@ -9,7 +9,7 @@
 <div class="container">
     <div class="row">
         <div class="col-4" id="profile-left">
-            <h2>Hi, wanderer!</h2>
+            <h2 class="sec-head">Hi, wanderer!</h2>
             <div class="row card" style="width: 18rem;">
                 <img src="/static/user-images/hair_innercolor.png" class="card-img-top" alt="...">
                 <div class="card-body">
@@ -25,24 +25,26 @@
                 <a href="#" class="btn btn-primary">Go somewhere</a>
                 </div>
               </div>
-              <h3>city passport</h3>
+              <!-- <h3 class="sec-head">city passport</h3> -->
               <div class="row">
                 <img src="/static/site-images/passport_rinji.png" alt="passport image" id="passport" style="width: 18rem;">
             </div>
         </div>
         <div class="col-8">
-            <h2>Your World</h2>
+            <h2 class="sec-head">Your World</h2>
             <div id="map" class="row"></div>
-            <h2>Your Cities</h2>
+            <h2 class="sec-head">Your Cities</h2>
             <div class="row row-cols-md-3" id="saved-cards">
                 {% for city in user_dict.saved %}
-                <div class="card text-center">
+                <div class="col">
+                <div class="card text-center m-2">
                     <h4 class="card-header">{{ city[0] }}</h6>
                     <div class="class-body py-3">
                     <!-- <h4 class="card-title">{{ city[0] }}</h4> -->
                     <h6 class="card-subtitle text-muted">{{ city[3] }}</h6>
                     <h6 class="card-text"><a href="/city-info/{{ city[2] }}/{{ city[0] }}">view city page</a></h6>
                     </div>
+                </div>
                 </div>
                 {% endfor %}
             </div>
