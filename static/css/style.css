@@ -6,6 +6,10 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Rufina', serif;
 }
 
+h1, h2, h3 {
+    padding: 15px 0;
+}
+
 div.scorebox {
     display: inline-block;
     border: solid 1px;
@@ -15,6 +19,10 @@ div.scorebox {
 
 .hide {
     display: none;
+}
+
+.clr-primary {
+    color: #b2ffa9;
 }
 
 .carousel-item img {

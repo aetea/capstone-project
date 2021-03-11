@@ -1,6 +1,9 @@
 
 // =============== Save Functions ================
 
+function popLocalToast() {
+};
+
 // function to send save city request to server 
 function saveCityRequest(userId, cityId, isPastLocal) {
     const connectionData = {
@@ -14,8 +17,12 @@ function saveCityRequest(userId, cityId, isPastLocal) {
     $.post("/save-city", connectionData, (res) => {
         if (res === "success") {
             // update button 
-            $("#save-btn").attr("class", "hide");
-            $("#unsave-btn").attr("class", "show");
+            // $("#save-btn").attr("class", "hide");
+            // $("#unsave-btn").attr("class", "show");
+            $("#save-btn").removeClass("show");
+            $("#save-btn").addClass("hide");
+            $("#unsave-btn").removeClass("hide");
+            $("#unsave-btn").addClass("show");
             $("#pastlocal-div").attr("class", "show");
         } else {
             alert("uhoh! sorry, that did not work"); 
