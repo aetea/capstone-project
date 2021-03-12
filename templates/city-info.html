@@ -179,6 +179,7 @@
         <div class="row sec-head"><h3>procedures</h3></div>
         <div class="accordion" id="paccordian">
             {% for p in sherpap %}
+            {% if p["attributes"]["tags"][0] == "international" %}
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="phead{{loop.index}}">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pcollapse{{loop.index}}" aria-expanded="false" aria-controls="pcollapse{{loop.index}}">
@@ -195,6 +196,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
             {% endfor %}
         </div>
     </div>

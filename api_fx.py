@@ -259,3 +259,11 @@ def sherpa_procedures(ccode):
     #         })
     # >>> len(procedures)
     # 6
+
+
+def filter_procedures_sev(plist, sev):
+    """Filter procedures to get items that have severity greater than sev."""
+
+    new_plist = [p for p in plist if p["attributes"].get("severity",0) > sev]
+
+    return new_plist 

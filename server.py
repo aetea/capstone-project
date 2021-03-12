@@ -127,6 +127,7 @@ def city_country_info(country_iso, city_name):
     sc = api_fx.sherpa_country_request(iso)["data"][0] # [1st country]
     sr = api_fx.sherpa_restrictions(iso)["data"]  # []
     sp = api_fx.sherpa_procedures(iso)["data"]  # []
+    sp_high = api_fx.filter_procedures_sev(sp, 2) # get procedures with min sev3
 
     saved = [False]
     for uc in ada.user_cities: 
@@ -135,7 +136,7 @@ def city_country_info(country_iso, city_name):
     
     return render_template("city-info.html", city=city_dict, user=ada, 
                             saved=saved, local=None,
-                            sherpac=sc, sherpar=sr, sherpap=sp)
+                            sherpac=sc, sherpar=sr, sherpap=sp_high)
     # * clear session["last_city"] on city-info page to prevent locking user in
 
 
