@@ -65,8 +65,7 @@
         </div>
         <div class="row" id="city-info-save">
             <div class="col-8">
-                <p>city blurb blah blah blah put some description here</p>
-                <p>Here's some info about it...</p>
+                {{ city["summary"]|safe }}
                 <p id="country">Country: {{ city["tele_country_name"].title() }}</p>
             </div>
             <div class="col-4">

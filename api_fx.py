@@ -83,6 +83,10 @@ def tele_city_details(geoid):
         img_link = photo_1["image"]["web"]
         city_dict["img_link"] = img_link
 
+        # get summary
+        summary = ua_dict["_embedded"]["ua:scores"]["summary"]
+        city_dict["summary"] = summary
+
     return city_dict  # could be basic or scores dict 
 
 
