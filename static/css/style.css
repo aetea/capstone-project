@@ -76,7 +76,8 @@ footer p {
 }
 
 .btn-primary {
-    color: var(--bs-primary);
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
 }
 
 .form-control {
@@ -179,7 +180,7 @@ footer p {
 }
 
 #city-photo img {
-    width: 80vw;
+    width: 100%;
 }
 
 #passport {

@@ -64,33 +64,33 @@
                 <strong>Note:</strong>
                 {{ city["tele_country_name"].title() }} currently has the entry status {{ sherpac["attributes"]["entryStatus"] }}
             </div> 
-            <div class="col" style="text-align: right;"><a href="#travel">jump to travel advisories</a></div>
+            <div class="col text-end"><a href="#travel">jump to travel advisories</a></div>
         </div>
         <div class="row" id="city-info-save">
             <div class="col-8">
                 <em id="urban-area">Belonging to the broader urban area: {{ city["urban_area"].title() }}</em>
                 <p>{{ city["summary"]|safe }}</p>
             </div>
-            <div class="col-4">
+            <div class="col-4 text-center">
                 <form action="/save-city" method="POST">
 
-                    <div id="save-buttons">
+                    <div id="save-elements" class="{{ "show" if saved[0]==False else "hide" }}">
                         <button id="save-btn" name="save-city" value="{{ city["city_id"] }}"
-                                class="btn btn-light {{ "show" if saved[0]==False else "hide" }}">
+                                class="btn btn-lg btn-outline-info my-3">
                             Save {{ city["tele_city_name"] }}
                         </button>
-            
-                        <button id="unsave-btn" name="unsave-city" value="{{ city["city_id"] }}"
-                                class="btn btn-sm btn-primary {{ "show" if saved[0]==True else "hide" }}">
-                        Unsave {{ city["tele_city_name"] }}
-                        </button> Saved!
                     </div>
-            
-                    {% if saved[0]==False %} {% set show_past="hide" %} {% endif %}
-                    {% if saved[1]=="past_local" %} {% set check="checked" %} {% endif %}
-                    <div id="pastlocal-div" class={{ show_past }}>
-                        <input type="checkbox" name="past-local" id="past-local-box" {{check}}>
-                        <label for="past-local">I've also lived here</label>
+                    <div id="unsave-elements" class="{{ "hide" if saved[0]==False else "show" }}">
+                        <button id="unsave-btn" name="unsave-city" value="{{ city["city_id"] }}"
+                                class="btn btn-lg btn-primary my-3">
+                        Unsave {{ city["tele_city_name"] }}
+                        </button> 
+
+                        {% if saved[1]=="past_local" %} {% set check="checked" %} {% endif %}
+                        <div id="pastlocal-div" class={{ show_past }}>
+                            <input type="checkbox" name="past-local" id="past-local-box" {{check}}>
+                            <label for="past-local">I've also lived here!</label>
+                        </div>
                     </div>
             
                     <input type="hidden" id="h-uid" name="user-id" value="1">
@@ -201,19 +201,11 @@
                 {% endif %}
             {% endfor %}
         </div>
+        <hr class="featurette-divider">
+    
+        <div id="city-photo"><img src="{{ city["img_link"]}}" alt="city-image"></div>
     </div>
 
-    <hr class="featurette-divider">
-
-    <!-- section 1: country travel warnings -->
-
-        <div id="sherpa-country"><em>display sherpa country info</em>
-            <p>{{ sherpac["attributes"] }}</p> 
-        </div>
-
-    </div>
-
-    <div id="city-photo"><img src="{{ city["img_link"]}}" alt="city-image"></div>
 
 
     <!-- < city map here >

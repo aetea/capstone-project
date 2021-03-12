@@ -17,13 +17,8 @@ function saveCityRequest(userId, cityId, isPastLocal) {
     $.post("/save-city", connectionData, (res) => {
         if (res === "success") {
             // update button 
-            // $("#save-btn").attr("class", "hide");
-            // $("#unsave-btn").attr("class", "show");
-            $("#save-btn").removeClass("show");
-            $("#save-btn").addClass("hide");
-            $("#unsave-btn").removeClass("hide");
-            $("#unsave-btn").addClass("show");
-            $("#pastlocal-div").attr("class", "show");
+            $("#save-elements").attr("class", "hide");
+            $("#unsave-elements").attr("class", "show");
         } else {
             alert("uhoh! sorry, that did not work"); 
         };
@@ -65,9 +60,9 @@ function unsaveCity(userId, cityId) {
     $.post("/unsave-city", connectionData, (res) => {      // callback function
         if (res === "success") {
             // update button
-            $("#save-btn").attr("class", "show");
-            $("#unsave-btn").attr("class", "hide");
-            $("#pastlocal-div").attr("class", "hide");
+            $("#save-elements").attr("class", "show");
+            $("#unsave-elements").attr("class", "hide");
+            // $("#pastlocal-div").attr("class", "hide");
         } else {
             alert("uhoh! sorry, that did not work");
         };
