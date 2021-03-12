@@ -36,6 +36,16 @@ h1, h2, h3, h4, h5, h6 {
     color: #b2ffa9;
 }
 
+:root {
+    --bs-light: #d4f2d2;
+    --bs-primary: #66c7f4; 
+    --bs-success: #b2ffa9;
+    --ggate: #bb4430;
+    --earthblue: #92afd7; 
+    --mydark: #232c33; 
+}
+
+
 /* ===== ELEMENT spacing and styles ==== */
 
 /* ~~~ general classes ~~~ */
@@ -44,6 +54,36 @@ h1, h2, h3, h4, h5, h6 {
     display: none;
 }
 
+.btn {
+    border-radius: 0;
+    padding-top: .25rem;
+    padding-bottom: .25rem;
+}
+
+.btn-dark {
+    background-color: var(--mydark);
+    border-color: var(--mydark);
+}
+
+.btn-primary {
+    color: var(--bs-primary);
+}
+
+.form-control {
+    border-radius: 0;
+}
+
+.card {
+    border-radius: 0;
+}
+
+.alert {
+    border-radius: 0;
+}
+
+.navbar {
+    background-image: url("/static/site-images/funky-lines.png");
+}
 
 /* ~~~ for specific elements ~~~ */
 
@@ -56,7 +96,10 @@ h1, h2, h3, h4, h5, h6 {
 } */
 
 .footer {
-    background-color: #b2ffa9;
+    background-image: url("/static/site-images/vintage-concrete.png");
+    /* background-color: var(--mydark); */
+    opacity: 0.6;
+    filter: grayscale(65%);
     height: 10vh;
 }
 
@@ -67,6 +110,8 @@ h1, h2, h3, h4, h5, h6 {
 #home-form {
     background-color: white;
     padding: 20px 30px;
+    border-style: ridge;
+    border-color: darkgray;
 }
 
 #user-photo {
@@ -74,6 +119,15 @@ h1, h2, h3, h4, h5, h6 {
     height: auto;
     border: solid 1px;
     margin: 0px 30px;
+}
+
+#header-div {
+    margin: 0 2rem;
+}
+
+#head-profile {
+    width: 10vw;
+    text-align: right;
 }
 
 #header-profile {
@@ -88,6 +142,10 @@ h1, h2, h3, h4, h5, h6 {
     vertical-align: middle;
 }
 
+#btn-header-go {
+    width: 10rem;
+}
+
 #city-photo img {
     width: 80vw;
 }
@@ -99,6 +157,16 @@ h1, h2, h3, h4, h5, h6 {
 #saved-cards div {
     padding-left: 0;
     padding-right: 0;
+}
+
+.carousel-item img {
+    object-fit: cover;
+    width: 100%;
+    height: 350px;
+}
+
+#map {
+    height: 400px;
 }
 
 /* === misc other / dep === */

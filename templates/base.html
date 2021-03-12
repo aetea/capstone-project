@@ -21,22 +21,24 @@
 <body>
 
     <!-- header navbar  -->
-    <nav class="navbar navbar-expand-sm navbar-light" style="background-color: #e3f2fd;">
-        <div class="container-fluid">
+    <nav class="navbar navbar-expand-sm navbar-light">
+        <div class="container-fluid" id="header-div">
             <a class="navbar-brand" href="/"><< Wander-Vision >></a>
             {% if active_page == "index" %}
                 <div class="navbar-text flex-fill">have a looksee before starting your next story</div>
             {% else %}
                 <form class="d-flex flex-fill" action="/city-search">
                 <input class="form-control" type="search" name="city-search" id="header-search-box" placeholder="Enter a city name">
-                <button class="btn btn-outline-success" type="submit">Go!</button>
+                <button class="btn btn-dark" type="submit" id="btn-header-go">Take me there</button>
                 </form>
             {% endif %}  
             <div class="navbar-nav">
                 {% if not active_page == "profile" %}
-                    <span class="nav-link flex-fill"> 
+                    <span class="nav-link" id="head-profile"> 
                     <a href="/profile/{{ user.user_id }}">view profile</a>
                     </span>
+                {% else %}
+                    <span id="head-profile"></span>
                 {% endif %}  
             </div>
         </div>
@@ -52,7 +54,7 @@
         macaron ruffles
         links stay in touch
     </div> -->
-    <footer class="footer mt-auto bg-light">
+    <footer class="footer mt-auto bg-dark">
         new footer sticky
     </footer>
 
