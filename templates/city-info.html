@@ -60,13 +60,16 @@
     <div class="container">
         <div class="row sec-head"><h1>{{ city["tele_city_name"].title() }}</h1></div>
         <div class="row alert alert-warning justify-content-between">
-            <div class="col-8">country alert</div> 
-            <div class="col"><a href="#travel">jump to travel advisories</a></div>
+            <div class="col-8">
+                <strong>Note:</strong>
+                {{ city["tele_country_name"].title() }} currently has the entry status {{ sherpac["attributes"]["entryStatus"] }}
+            </div> 
+            <div class="col" style="text-align: right;"><a href="#travel">jump to travel advisories</a></div>
         </div>
         <div class="row" id="city-info-save">
             <div class="col-8">
-                {{ city["summary"]|safe }}
-                <p id="country">Country: {{ city["tele_country_name"].title() }}</p>
+                <em id="urban-area">Belonging to the broader urban area: {{ city["urban_area"].title() }}</em>
+                <p>{{ city["summary"]|safe }}</p>
             </div>
             <div class="col-4">
                 <form action="/save-city" method="POST">
@@ -209,21 +212,6 @@
             <p>{{ sherpac["attributes"] }}</p> 
         </div>
 
-        <div id="procedures"><em>display procedures</em>
-            <ul>{% for p in sherpap %}
-            {# if "international" == p["attributes"]["tags"][0] #}
-                <li><strong>{{ p["attributes"]["title"] }}</strong>
-                {{ p["attributes"]["description"] }}
-                || cat: {{ p["attributes"]["category"] }}
-                || subcat: {{ p["attributes"]["subcategory"] }}
-                || severity: {{ p["attributes"]["severity"] }}
-                || <a href="{{ p["attributes"]["source"]["url"] }}">source</a>
-                || tags: {{ p["attributes"]["tags"] }}</li>
-            {# {% endif %} #}
-            {% endfor %}
-            </ul>
-        </div>
-        
     </div>
 
     <div id="city-photo"><img src="{{ city["img_link"]}}" alt="city-image"></div>

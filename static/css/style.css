@@ -90,6 +90,10 @@ b, strong {
     background-image: url("/static/site-images/funky-lines.png");
 }
 
+.navbar-light .navbar-text {
+    color: rgba(0,0,0,.6);
+}
+
 /* ~~~ for specific elements ~~~ */
 
 /* #header-bar div {
@@ -157,6 +161,7 @@ b, strong {
 
 #passport {
     object-fit: contain;
+    padding-top: 3rem;
 }
 
 #saved-cards div {

@@ -134,6 +134,9 @@ def city_country_info(country_iso, city_name):
         if city_dict["city_id"] == uc.city.city_id:
             saved = [True, uc.user_status]
     
+    print(" * " * 15)
+    print(f"RENDER CITY-INFO, passing city_dict: {city_dict}")
+    
     return render_template("city-info.html", city=city_dict, user=ada, 
                             saved=saved, local=None,
                             sherpac=sc, sherpar=sr, sherpap=sp_high)
