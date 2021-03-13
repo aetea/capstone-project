@@ -1,5 +1,5 @@
 
-/* TEXT styles */
+/* =========== TEXT styles =========== */
 
 body {
     font-family: 'PT Serif', serif;
@@ -31,16 +31,11 @@ footer p {
     padding: 20px 0;
 }
 
-.card-subtitle {
-    margin-top: 0.5rem;
-    margin-bottom: 1rem;
-}
-
 .card-text {
     padding: 1rem 0;
 }
 
-/* COLOURS  */
+/* =========== COLOURS =========== */
 
 .clr-primary {
     color: #b2ffa9;
@@ -58,10 +53,14 @@ footer p {
 
 /* ===== ELEMENT spacing and styles ==== */
 
-/* ~~~ general classes ~~~ */
+/* ~~~~~~~~~~ gen/reusable ~~~~~~~~~ */
 
 .hide {
     display: none;
+}
+
+.btn:hover {
+    color: #ffffff;
 }
 
 .btn {
@@ -86,12 +85,23 @@ footer p {
 
 .card {
     border-radius: 0;
+    border-style: double;
+    border-width: thick;
 }
 
 .alert {
     border-radius: 0;
 }
 
+#map {
+    height: 400px;
+}
+
+
+/* ======= specific pages & elements ======= */
+
+
+/* ~~~~~~~~~ NAVBAR ~~~~~~~~~~~ */
 .navbar {
     background-image: url("/static/site-images/funky-lines.png");
     padding-top: .25rem;
@@ -102,15 +112,27 @@ footer p {
     color: rgba(0,0,0,.6);
 }
 
-/* ~~~ for specific elements ~~~ */
-
-/* #header-bar div {
-    display: inline-block;
+#header-div {
+    margin: 0 2rem;
 }
 
-#header-bar h1, p {
-    margin: 5px 15px;
-} */
+#btn-header-go {
+    width: 10rem;
+}
+
+#header-profile {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+#header-profile img {
+    width: 30px;
+    height: auto;
+    vertical-align: middle;
+}
+
+/* ~~~~~~~~~ FOOTER ~~~~~~~~~~ */
 
 .footer {
     background-image: url("/static/site-images/vintage-concrete.png");
@@ -136,6 +158,8 @@ footer p {
     margin-right: .25rem;
 }
 
+/* ~~~~~~~~ HOME PAGE ~~~~~~~~~~ */
+
 #home-body {
     height: 80vh;
 }
@@ -147,6 +171,8 @@ footer p {
     border-color: darkgray;
 }
 
+/* ~~~~~~~~~~ PROFILE ~~~~~~~~~~ */
+
 #user-photo {
     width: 100px;
     height: auto;
@@ -154,33 +180,13 @@ footer p {
     margin: 0px 30px;
 }
 
-#header-div {
-    margin: 0 2rem;
-}
-
 #head-profile {
     width: 10vw;
     text-align: right;
 }
 
-#header-profile {
-    position: absolute;
-    right: 20px;
-    top: 20px;
-}
-
-#header-profile img {
-    width: 30px;
-    height: auto;
-    vertical-align: middle;
-}
-
-#btn-header-go {
-    width: 10rem;
-}
-
-#city-photo img {
-    width: 100%;
+#profile-box {
+    width: 18rem;
 }
 
 #passport {
@@ -193,21 +199,19 @@ footer p {
     padding-right: 0;
 }
 
+/* #saved-cards .card {
+    border-style: double;
+    border-width: thick;
+} */
+
+/* ~~~~~~~~~ CITY INFO ~~~~~~~~~~ */
+
+#city-photo img {
+    width: 100%;
+}
+
 .carousel-item img {
     object-fit: cover;
     width: 100%;
     height: 350px;
-}
-
-#map {
-    height: 400px;
-}
-
-/* === misc other / dep === */
-
-div.scorebox {
-    display: inline-block;
-    border: solid 1px;
-    padding: 15px;
-    margin: 10px;
 }

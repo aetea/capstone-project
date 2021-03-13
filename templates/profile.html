@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-4" id="profile-left">
             <h2 class="sec-head">Hi, wanderer!</h2>
-            <div class="row card" style="width: 18rem;">
+            <div class="card p-3" id="profile-box">
                 <img src="/static/user-images/hair_innercolor.png" class="card-img-top" alt="...">
                 <div class="card-body">
                 <h5 class="card-title">{{ user_dict.first }} {{ user_dict.last }}</h5>
@@ -22,7 +22,7 @@
                     {% else %} <a href="">(add city)</a>
                     {% endif %}
                 </p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+                <a href="#" class="btn btn-primary">Edit details</a>
                 </div>
               </div>
               <!-- <h3 class="sec-head">city passport</h3> -->
@@ -36,18 +36,37 @@
             <h2 class="sec-head">Your Cities</h2>
             <div class="row row-cols-md-3" id="saved-cards">
                 {% for city in user_dict.saved %}
-                <div class="col">
-                <div class="card text-center m-2">
-                    <h4 class="card-header">{{ city[0] }}</h6>
-                    <div class="class-body py-3">
-                    <!-- <h4 class="card-title">{{ city[0] }}</h4> -->
-                    <h6 class="card-subtitle text-muted">{{ city[3] }}</h6>
-                    <h6 class="card-text"><a href="/city-info/{{ city[2] }}/{{ city[0] }}">view city page</a></h6>
+                    {% if city[5] == "future" %}
+                    <div class="col">
+                    <div class="card text-center m-2">
+                        <h4 class="card-header">{{ city[0] }}</h4>
+                        <div class="class-body py-2">
+                        <!-- <h4 class="card-title">{{ city[0] }}</h4> -->
+                        <h6 class="card-subtitle text-muted py-3">{{ city[3] }}</h6>
+                        <h6 class="card-text py-1"><a href="/city-info/{{ city[2] }}/{{ city[0] }}">view city page</a></h6>
+                        </div>
+                        <!-- <div class="card-footer text-muted">{{ city[3] }}</div> -->
                     </div>
-                </div>
-                </div>
+                    </div>
+                    {% endif %}
                 {% endfor %}
             </div>
+            <h3 class="sec-head">... Especially the Places You've Lived In</h3>
+            <div class="row row-cols-md-3" id="saved-cards">
+                {% for city in user_dict.saved %}
+                    {% if city[5] == "past_local" %}
+                    <div class="col">
+                        <div class="card text-center m-2">
+                            <h4 class="card-header">{{ city[0] }}</h4>
+                            <div class="class-body py-2">
+                            <!-- <h4 class="card-title">{{ city[0] }}</h4> -->
+                            <h6 class="card-subtitle text-muted py-3">{{ city[3] }}</h6>
+                            <h6 class="card-text py-1"><a href="/city-info/{{ city[2] }}/{{ city[0] }}">view city page</a></h6>
+                            </div>
+                        </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
         </div>
     </div>    
 </div>

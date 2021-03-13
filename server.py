@@ -71,6 +71,9 @@ def profile(user_id):
 
     user_dict = user.make_dict()
     # user_json = jsonify(user_dict)
+    print(" * " * 15)
+    print(f"passing a user_dict of type {type(user_dict)}")
+    pprint(user_dict)
 
     return render_template("profile.html", user_dict=user_dict)
 

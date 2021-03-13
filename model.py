@@ -39,7 +39,7 @@ class User(db.Model):
         # get list of cities saved
         saved_cities = [(uc.city.city_name, uc.city.city_id, 
                         uc.city.country_code, uc.city.country.name, 
-                        uc.city.latlon) 
+                        uc.city.latlon, uc.user_status) 
                         for uc in self.user_cities ]
 
         dict = {
@@ -47,7 +47,7 @@ class User(db.Model):
             "first": self.first_name, 
             "last": self.last_name, 
             "email": self.email, 
-            "saved": saved_cities    # [(cname, cid, ccode, ctry, latlon)]
+            "saved": saved_cities    # [(cname, cid, ccode, ctry, latlon, status)]
         }
 
         return dict
