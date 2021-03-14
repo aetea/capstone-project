@@ -40,11 +40,11 @@
                     <div class="carousel-item {{ "active" if loop.first }}">
                         <img src="/static/city-images/{{ city["tele_city_name"]|lower }}/{{img}}" class="d-block w-100" alt="">
                     </div>
-                {% else %}
-                    <div class="carousel-item active">
-                        <img src="{{ city["img_link"]}}" class="d-block w-100" alt="">
-                    </div>
                 {% endfor %}
+            {% else %}
+                <div class="carousel-item active">
+                    <img src="{{ city["img_link"] }}" class="d-block w-100" alt="">
+                </div>
             {% endif %}
         </div>
         <!-- add next/prev buttons to carousel -->
