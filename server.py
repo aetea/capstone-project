@@ -34,8 +34,9 @@ app.secret_key = "gjlrkejlkj64jgk39lkw"
 def pick_homepage_photo():
     """Pick a random image from bg-folder as homepage background."""
 
-    cwd = os.getcwd()
-    bg_images = os.listdir(cwd + "/static/backgrounds")
+    bg_folder = os.getcwd() + "/static/backgrounds"
+    bg_images = [f for f in os.listdir(bg_folder) if not f.startswith(".")]
+    # * ^ don't use hidden files, like .DS_Store
     photo_url = random.choice(bg_images)
 
     return photo_url
@@ -45,23 +46,17 @@ def img_folder_exists(city_name):
     """Check if static has a folder with given city name."""
 
     city_name = city_name.lower()
-    cwd = os.getcwd()
+    city_img_path = os.getcwd() + "/static/city-images/"
 
-    # >>> os.path.exists(cwd + '/static/city-images')
-    # True
-    # >>> os.path.exists(cwd + '/static/city-images/seoul')
-    # True
-    # >>> os.path.exists(cwd + '/static/city-images/new york city')
-    # True
-
-    return os.path.exists(cwd + '/static/city-images/' + city_name)
+    return os.path.exists(city_img_path + city_name)
 
 
 def city_images(city_name):
     """Get list of images from static folder to pass to city-info page."""
 
-    cwd = os.getcwd()
-    city_images = os.listdir(cwd + "/static/city-images/" + city_name.lower())
+    city_img_path = os.getcwd() + "/static/city-images/"
+    city_images = [f for f in os.listdir(city_img_path + city_name.lower()) 
+                    if not f.startswith(".")]
 
     return city_images  # ["img1.jpg", "img2.jpg"]
 

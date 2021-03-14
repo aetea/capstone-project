@@ -102,14 +102,6 @@ footer p {
     height: 400px;
 }
 
-
-/* ======= specific pages & elements ======= */
-
-/* use data attribute to style search results table rows */
-[data-href] { 
-    cursor: pointer; 
-}
-
 #main-container {
     min-height:100vh;
     position:relative;
@@ -118,6 +110,14 @@ footer p {
 #main-body {
     /* padding:10px; */
     padding-bottom: 10vh;   /* Height of the footer */
+}
+
+
+/* ======= specific pages & elements ======= */
+
+/* use data attribute to style search results table rows */
+[data-href] { 
+    cursor: pointer; 
 }
 
 /* ~~~~~~~~~ NAVBAR ~~~~~~~~~~~ */
