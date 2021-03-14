@@ -30,6 +30,7 @@ app.secret_key = "gjlrkejlkj64jgk39lkw"
 #     # "name": ""
 # }
 
+
 def pick_homepage_photo():
     """Pick a random image from bg-folder as homepage background."""
 
@@ -38,6 +39,32 @@ def pick_homepage_photo():
     photo_url = random.choice(bg_images)
 
     return photo_url
+
+
+def img_folder_exists(city_name):
+    """Check if static has a folder with given city name."""
+
+    city_name = city_name.lower()
+    cwd = os.getcwd()
+
+    # >>> os.path.exists(cwd + '/static/city-images')
+    # True
+    # >>> os.path.exists(cwd + '/static/city-images/seoul')
+    # True
+    # >>> os.path.exists(cwd + '/static/city-images/new york city')
+    # True
+
+    return os.path.exists(cwd + '/static/city-images/' + city_name)
+
+
+def city_images(city_name):
+    """Get list of images from static folder to pass to city-info page."""
+
+    cwd = os.getcwd()
+    city_images = os.listdir(cwd + "/static/city-images/" + city_name.lower())
+
+    return city_images  # ["img1.jpg", "img2.jpg"]
+
 
 # =============================================
 #                 Flask Routes 
@@ -120,7 +147,7 @@ def city_country_info(country_iso, city_name):
 
     # if basic dict, render "no results/not enough info page"
     if city_dict.get("urban_area") == None:
-        return "[BETTER_ERROR] found that city in teleport, but no detailed info :("
+        return "[ERROR] found that city in teleport, but no detailed info :("
 
     # add to db if not yet there
     # todo: make this another func(geoid) -> return City
@@ -148,15 +175,20 @@ def city_country_info(country_iso, city_name):
     saved = [False]
     for uc in ada.user_cities: 
         if city_dict["city_id"] == uc.city.city_id:
-            saved = [True, uc.user_status]
+            saved = [True, uc.user_status]      # user_status = future/past/current
+
+    # get city photos 
+    city_img_list = []
+    if img_folder_exists(city_name):
+        city_img_list = city_images(city_name)
+        print(city_img_list)
     
     print(" * " * 15)
     print(f"RENDER CITY-INFO, passing city_dict: {city_dict}")
     
     return render_template("city-info.html", city=city_dict, user=ada, 
-                            saved=saved, local=None,
+                            saved=saved, local=None, img_list=city_img_list,
                             sherpac=sc, sherpar=sr, sherpap=sp_high)
-    # * clear session["last_city"] on city-info page to prevent locking user in
 
 
 @app.route("/city-search")

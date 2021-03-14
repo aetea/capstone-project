@@ -35,15 +35,17 @@
         </div>
         <!-- put 3 images in the carousel -->
         <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="/static/city-images/bundo-kim-p_D5pbQG5TE-unsplash.jpg" class="d-block w-100" alt="...">
-            </div>
-            <div class="carousel-item">
-                <img src="/static/city-images/yeo-khee--e6Xu27_T50-unsplash.jpg" class="d-block w-100" alt="...">
-            </div>
-            <div class="carousel-item">
-                <img src="/static/city-images/zequn-gui-xVFS3meofYM-unsplash.jpg" class="d-block w-100" alt="...">
-            </div>
+            {% if img_list %}
+                {% for img in img_list %}
+                    <div class="carousel-item {{ "active" if loop.first }}">
+                        <img src="/static/city-images/{{ city["tele_city_name"]|lower }}/{{img}}" class="d-block w-100" alt="">
+                    </div>
+                {% else %}
+                    <div class="carousel-item active">
+                        <img src="{{ city["img_link"]}}" class="d-block w-100" alt="">
+                    </div>
+                {% endfor %}
+            {% endif %}
         </div>
         <!-- add next/prev buttons to carousel -->
         <button class="carousel-control-prev" type="button" data-bs-target="#cityCarousel" data-bs-slide="prev">
