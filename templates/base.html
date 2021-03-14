@@ -20,51 +20,57 @@
 </head>
 <body>
 
-    <!-- header navbar  -->
-    <nav class="navbar navbar-expand-sm navbar-light">
-        <div class="container-fluid" id="header-div">
-            <a class="navbar-brand" href="/"><< Wander-Vision >></a>
-            {% if active_page == "index" %}
-                <div class="navbar-text flex-fill">have a looksee before starting your next story</div>
-            {% else %}
-                <form class="d-flex flex-fill" action="/city-search">
-                <input class="form-control" type="search" name="city-search" id="header-search-box" placeholder="Enter a city name">
-                <button class="btn btn-dark" type="submit" id="btn-header-go">Take me there</button>
-                </form>
-            {% endif %}  
-            <div class="navbar-nav">
-                {% if not active_page == "profile" %}
-                    <span class="nav-link" id="head-profile"> 
-                    <a href="/profile/{{ user.user_id }}">view profile</a>
-                    </span>
-                {% else %}
-                    <span id="head-profile"></span>
-                {% endif %}  
-            </div>
-        </div>
+<div id="main-container">
+        
+    <!-- header -->
+    <nav class="navbar container-fluid navbar-expand-sm navbar-light">
+        <!-- nav-left -->
+        <a class="navbar-brand" href="/"><< Wander-Vision >></a>
+        <!-- nav-center -->
+        {% if active_page == "index" %}
+            <div class="navbar-text flex-fill">have a looksee before starting your next story</div>
+        {% else %}
+            <form class="d-flex flex-fill" action="/city-search">
+            <input class="form-control" type="search" name="city-search" id="header-search-box" placeholder="Enter a city name">
+            <button class="btn btn-dark" type="submit" id="btn-header-go">Take me there</button>
+            </form>
+        {% endif %}  
+        <!-- nav-right -->
+        {% if not active_page == "profile" %}
+            <span class="nav-link" id="head-profile"> 
+            <a href="/profile/{{ user.user_id }}">view profile</a>
+            </span>
+        {% else %}
+            <span id="head-profile"></span>
+        {% endif %}  
     </nav>
 
+    <div id="main-body">
     <!-- rest of the page goes here  -->
-
-    <!-- like the content block -->
     {% block body %} REPLACE BODY CONTENT {% endblock %}
-    
-    <!-- and footer -->
-    <!-- <div class="container-fluid position-relative bottom-0 start-50 translate-middle-x footer">
-        macaron ruffles
-        links stay in touch
-    </div> -->
-    <footer class="footer mt-auto bg-dark ">
+    </div>
+
+    <!-- footer -->
+    <footer class="footer mt-auto bg-dark" id="footer">
         <div class="d-flex mx-5 align-items-center" id="footer-full-div">
+            <!-- footer-left -->
             <div class="col-3 px-2 align-items-center" id="footer-social">
-                <p><img src="/static/icons/039-github.svg" alt="github icon"> github.com/aetea</p>
+                <p><a href="https://github.com/aetea/">
+                    <img src="/static/icons/039-github.svg" alt="github icon">
+                    github.com/aetea
+                </a></p>
                 <!-- <p><img src="/static/icons/001-at sign.svg" alt="email icon"> adeleteoh•gmail</p> -->
-                <p><img src="/static/icons/031-linkedin.svg" alt="linkedin icon" style="width: .8rem;"> linkedin.com/in/adeleteoh</p>
+                <p><a href="https://www.linkedin.com/in/adeleteoh/">
+                    <img src="/static/icons/031-linkedin.svg" alt="linkedin icon" style="width: .8rem;">
+                    linkedin.com/in/adeleteoh
+                </a></p>
             </div>
+            <!-- footer-middle -->
             <div class="col-3 px-2">
                 <p>Stay safe, be well<br />
                 Made at Hackbright, March 2021</p>
             </div>
+            <!-- footer-right -->
             <div class="ms-auto">
                 <p>Attributions and licences<br />
                     Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from 
@@ -82,7 +88,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js" integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous"></script>    
     {% block scripts %} MORE SCRIPTS GO HERE {% endblock %}
 
-    </div>
+</div>
+
 </body>
 
 </html>

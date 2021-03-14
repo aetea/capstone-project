@@ -4,12 +4,30 @@
 
 {% block body %}
 
-    <p>Found the following cities; which one are you interested in?</p>
-    <ul>
-    {% for city in results %}
-        <li><a href="/city-info/{{city.iso}}/{{city.tele_name}}">{{ city }}</a></li>
-    {% endfor %}
-    </ul>
+<div class="container">
+    
+    <h2 class="my-3">We've found a few possible matches</h2>
+    <p>Which city are you interested in?</p>
+    <table class="table table-hover" id="search-results" style="width: 60vw;">
+        <caption class="hide">List of possible city matches</caption>
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">City Name</th>
+                <th scope="col">Country</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for city in results %}
+            <tr onclick="window.location='/city-info/{{city.iso}}/{{city.tele_name}}';">
+                <td>{{ city.tele_name }}</td>
+                <td>{{ city.tele_country }}</td>
+            </tr>
+        {% endfor%}
+        </tbody>
+    </table>
+
+</div>
+
 
 {% endblock %}
 
