@@ -105,6 +105,7 @@ footer p {
 
 /* ======= specific pages & elements ======= */
 
+/* use data attribute to style search results table rows */
 [data-href] { 
     cursor: pointer; 
 }
