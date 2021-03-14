@@ -154,7 +154,7 @@ footer p {
 .footer {
     background-image: url("/static/site-images/vintage-concrete.png");
     /* background-color: var(--mydark); */
-    opacity: 0.6;
+    opacity: 0.8;
     filter: grayscale(65%);
     /* * pos, bottom, height: ensure footer does not float up on short pages*/
     /* * make sure to set #main-body padding-bottom to footer-height */

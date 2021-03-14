@@ -4,6 +4,9 @@
 #              Imports & Initalise
 # =============================================
 
+# for working with system folders
+import os, random
+
 # imports for working with API
 import requests
 from pprint import pprint
@@ -27,6 +30,15 @@ app.secret_key = "gjlrkejlkj64jgk39lkw"
 #     # "name": ""
 # }
 
+def pick_homepage_photo():
+    """Pick a random image from bg-folder as homepage background."""
+
+    cwd = os.getcwd()
+    bg_images = os.listdir(cwd + "/static/backgrounds")
+    photo_url = random.choice(bg_images)
+
+    return photo_url
+
 # =============================================
 #                 Flask Routes 
 # =============================================
@@ -35,8 +47,9 @@ app.secret_key = "gjlrkejlkj64jgk39lkw"
 def index():
     """Show index.html template."""
     ada = User.query.get(1)
-    
-    return render_template("index.html", user=ada) 
+    bg_url = pick_homepage_photo()
+    print(f"using {bg_url} this time")
+    return render_template("index.html", user=ada, bg_url = bg_url) 
 
 
 @app.route("/login", methods=["POST"])
