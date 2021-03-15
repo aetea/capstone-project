@@ -162,6 +162,10 @@
         </div>
         <hr class="featurette-divider">
         <div class="row sec-head" id="travel"><h2>✈️ travel advisories</h2></div>
+        <em><small class="text-muted">
+            Different restrictions and procedures may apply depending on country of residency or origin. 
+            Please refer to linked sources for detailed information and additional updates.
+        </small></em>
         <div class="row sec-head"><h3>restrictions</h3></div>
         <div class="accordion" id="accordionExample">
             {% for r in sherpar %}
@@ -175,6 +179,7 @@
                     <div id="collapse{{loop.index}}" class="accordion-collapse collapse" aria-labelledby="head{{loop.index}}" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             {{ r["attributes"]["description"] }}
+                            || <a href="{{ r["attributes"]["source"]["url"] }}">source</a>
                         </div>
                     </div>
                 </div>
@@ -225,10 +230,10 @@
     let cityLon = {{ city["latlon"][1] }};
     let cityObj = {{ city | tojson }};
 
-    $(document).ready(function(){
-        $("#liveToast").toast('show');
-    });
-    </script>
+    // $(document).ready(function(){
+    //     $("#liveToast").toast('show');
+    // });
+    // </script>
 
     <script src="/static/js/ajax.js"></script> 
     <script src="/static/js/cityMap.js"></script>
