@@ -1,6 +1,6 @@
 """Functions to use with Teleport and Sherpa APIs."""
 
-import requests 
+import os, requests 
 from pprint import pprint
 from model import db, connect_to_db, User, City, UserCity
 from crud import add_city_db
@@ -169,7 +169,7 @@ def tele_search_cityname(city_name, limit=5):
 # ===========================================
 
 
-SHERPA_KEY = "AIzaSyBxoYsdMHOvhXJGA_oFH0jiXpaiE-uUnFw"
+SHERPA_KEY = os.environ['SHERPA_KEY']
 SHERPA_ROOT = "https://requirements-api.sandbox.joinsherpa.com/v2/"
 
 

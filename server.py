@@ -22,7 +22,7 @@ from crud import add_city_db, connect_one_usercity, delete_user_city, \
 import api_fx
 
 app = Flask(__name__)   # create a Flask object called "app"
-app.secret_key = "gjlrkejlkj64jgk39lkw"
+app.secret_key = os.environ['FLASK_KEY']
 
 
 # session["last_city"] = {
