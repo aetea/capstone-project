@@ -277,4 +277,4 @@ def unsave_city():
 if __name__ == "__main__":
     connect_to_db(app)  # creates relationship btwn flask obj and db 
     # app.run(host='0.0.0.0', debug=True)
-    app.run
+    app.run()
